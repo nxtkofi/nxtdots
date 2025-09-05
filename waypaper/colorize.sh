@@ -84,15 +84,9 @@ echo ":: Updating Cava gradient"
 $HOME/.config/settings/update-cava-gradient.sh
 
 # -----------------------------------------------------
-# Update Spicetify theme
+# Update Spicetify theme //TODO: create spicetify config 
 # -----------------------------------------------------
-pywal-spicetify text
-
-# -----------------------------------------------------
-# Reload Waybar
-# -----------------------------------------------------
-
-killall -SIGUSR2 waybar
+# pywal-spicetify text 
 
 # -----------------------------------------------------
 # Update Pywalfox
