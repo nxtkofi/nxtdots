@@ -15,7 +15,7 @@
 # -----------------------------------------------------
 
 defaultwallpaper="$HOME/wallpaper/default.jpg"
-cachefile="$HOME/.config/ml4w/cache/current_wallpaper"
+cachefile="$HOME/.config/cache/current_wallpaper"
 
 # -----------------------------------------------------
 # Get current wallpaper
