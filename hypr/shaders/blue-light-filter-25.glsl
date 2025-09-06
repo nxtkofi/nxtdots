@@ -1,8 +1,7 @@
-// from https://github.com/hyprwm/Hyprland/issues/1140#issuecomment-1335128437
 #version 300 es
-
+// from https://github.com/hyprwm/Hyprland/issues/1140#issuecomment-1335128437
 precision highp float;
-var in vec2 v_texcoord;
+in vec2 v_texcoord;
 uniform sampler2D tex;
 out vec4 fragColor;
 

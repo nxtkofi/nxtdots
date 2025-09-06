@@ -17,16 +17,16 @@
 	border-radius: 16px 0px 0px 16px;
 	font-size: 20px;
 	color: @accent;
-	background-color:@main-bg;
+	background-color: @main-bg;
 }
 
 #tray {
-	background-color:@main-bg;
+	background-color: @main-bg;
 }
 
 #custom-right_div.9 {
 	color: @main-bg;
-	margin-right:16px;
+	margin-right: 16px;
 }
 
 /* #custom-user { */
@@ -40,19 +40,23 @@
 #custom-right_div.1 {
 	color: @workspaces;
 }
+
 #workspaces {
 	padding: 0 1px;
 	background-color: @workspaces;
-;
+	;
 }
+
 button {
 	border-radius: 16px;
 	padding: 0 10px;
 }
+
 button:hover {
 	background-color: @hover-bg;
 	color: @hover-fg;
 }
+
 button.active label {
 	font-size: 23px;
 	color: @accent;
@@ -63,14 +67,17 @@ button.active label {
 #window {
 	margin-left: 12px;
 }
+
 #window label {
 	font-weight: normal;
 }
+
 #windowcount {
 	margin-right: 12px;
 }
+
 #windowcount label {
-	color: @hover-fg;
+	color: @main-bg;
 }
 
 /* temperature */
@@ -78,6 +85,7 @@ button.active label {
 #custom-left_div.2 {
 	color: @temperature;
 }
+
 #temperature {
 	background-color: @temperature;
 }
@@ -88,6 +96,7 @@ button.active label {
 	background-color: @temperature;
 	color: @memory;
 }
+
 #memory {
 	background-color: @memory;
 }
@@ -98,9 +107,11 @@ button.active label {
 	background-color: @memory;
 	color: @cpu;
 }
+
 #cpu {
 	background-color: @cpu;
 }
+
 #custom-left_inv.1 {
 	color: @cpu;
 }
@@ -111,6 +122,7 @@ button.active label {
 #custom-right_div.2 {
 	color: @accent;
 }
+
 #custom-distro {
 	padding: 0 10px 0 5px;
 	font-size: 23px;
@@ -123,13 +135,16 @@ button.active label {
 #custom-right_inv.1 {
 	color: @time;
 }
+
 #idle_inhibitor {
 	background-color: @time;
 }
+
 #clock.time {
 	padding-right: 6px;
 	background-color: @time;
 }
+
 #custom-right_div.3 {
 	background-color: @date;
 	color: @time;
@@ -141,6 +156,7 @@ button.active label {
 	padding-left: 6px;
 	background-color: @date;
 }
+
 #custom-right_div.4 {
 	background-color: @tray;
 	color: @date;
@@ -152,14 +168,17 @@ button.active label {
 	background-color: @tray;
 	padding: 0 6px 0 4px;
 }
+
 #bluetooth {
 	background-color: @tray;
 	padding: 0 5px;
 }
+
 #custom-system_update {
 	background-color: @tray;
 	padding: 0 8px 0 2px;
 }
+
 #custom-right_div.5 {
 	color: @tray;
 }
@@ -176,6 +195,7 @@ button.active label {
 #custom-left_div.6 {
 	color: @wireplumber;
 }
+
 #wireplumber {
 	background-color: @wireplumber;
 }
@@ -186,6 +206,7 @@ button.active label {
 	background-color: @wireplumber;
 	color: @backlight;
 }
+
 #backlight {
 	background-color: @backlight;
 }
@@ -200,6 +221,7 @@ button.active label {
 #battery {
 	background-color: @battery;
 }
+
 #custom-left_inv.2 {
 	color: @battery;
 }
@@ -213,6 +235,7 @@ button.active label {
 	color: @main-fmain-fgg;
 	background-color: @main-bg;
 }
+
 #custom-power_menu:hover {
 	background-color: @hover-bg;
 }
@@ -232,10 +255,21 @@ button.active label {
 	color: @hover-fg;
 }
 
-.warning { color: @warning; }
-.critical { color: @critical; }
-.charging { color: @charging; }
-.muted { color: @hover-fg; }
+.warning {
+	color: @warning;
+}
+
+.critical {
+	color: @critical;
+}
+
+.charging {
+	color: @charging;
+}
+
+.muted {
+	color: @hover-fg;
+}
 
 #custom-left_div,
 #custom-left_inv,
@@ -250,7 +284,7 @@ window#waybar {
 }
 
 /* background */
-window#waybar > box {
+window#waybar>box {
 	margin: 4px;
 	background-color: transparent;
 }
@@ -260,10 +294,12 @@ tooltip {
 	border-radius: 10px;
 	background-color: @main-bg;
 }
+
 tooltip label {
 	margin: 2px 4px;
 	font-weight: normal;
 }
+
 tooltip decoration {
 	border: none;
 	background-color: transparent;
@@ -273,7 +309,7 @@ tooltip decoration {
 #clock.time,
 #clock.date,
 #temperature {
-    padding-top: 0px;
-    padding-bottom: 0px;
-    min-height: 0;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 0;
 }

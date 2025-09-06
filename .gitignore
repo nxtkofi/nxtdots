@@ -28,4 +28,7 @@
 !fastfetch/
 !fastfetch/**
 
+!wal/
+!wal/**
+
 !starship.toml

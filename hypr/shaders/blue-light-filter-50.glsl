@@ -1,8 +1,10 @@
+#version 300 es
 // from https://github.com/hyprwm/Hyprland/issues/1140#issuecomment-1335128437
 
 precision highp float;
-varying vec2 v_texcoord;
+ in vec2 v_texcoord;
 uniform sampler2D tex;
+out vec4 fragColor;
 
 const float temperature = 3000.0;
 const float temperatureStrength = 0.5;
@@ -39,5 +41,5 @@ void main() {
 
     vec4 outCol = vec4(color, pixColor[3]);
 
-    gl_FragColor = outCol;
+    fragColor = outCol;
 }
