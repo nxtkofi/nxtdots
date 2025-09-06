@@ -1,6 +1,6 @@
 # Fastfetch
 if [[ $(tty) == *"pts"* ]]; then
-    fastfetch --config examples/28
+        $HOME/.config/fastfetch/custom_fastfetch.sh
 else
     echo
     if [ -f /bin/hyprctl ]; then
