@@ -25,4 +25,7 @@
 !settings/
 !settings/**
 
+!fastfetch/
+!fastfetch/**
+
 !starship.toml

@@ -137,3 +137,9 @@ echo "* { current-image: url(\"$blurredwallpaper\", height); }" >"$rasifile"
 echo ":: Generate new cached wallpaper square-$wallpaperfilename"
 magick $tmpwallpaper -gravity Center -extent 1:1 $squarewallpaper
 cp $squarewallpaper $generatedversions/square-$wallpaperfilename.png
+
+# Send SIGUSR1 to all kitty processes to reload config
+if pgrep -x "kitty" > /dev/null; then
+    echo ":: Sending SIGUSR1 to all kitty processes"
+    pkill -USR1 -x kitty
+fi
