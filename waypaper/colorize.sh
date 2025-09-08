@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ -f ~/.config/settings/wallpaper_cache ]; then
+if [ -f ~/.cache/wallpaper/cached_wallpaper ]; then
     use_cache=1
     echo ":: Using Wallpaper Cache"
 else
@@ -84,7 +84,8 @@ echo ":: Updating Cava gradient"
 $HOME/.config/settings/update-cava-gradient.sh
 
 # -----------------------------------------------------
-# Update Spicetify theme //TODO: create spicetify config 
+# Update Spicetify theme //TODO: Create spicetify config 
+# //TODO: Create vencord config
 # -----------------------------------------------------
 # pywal-spicetify text 
 

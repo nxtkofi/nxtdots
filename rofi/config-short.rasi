@@ -29,7 +29,7 @@ configuration {
 }
 
 /* ---- Load font ---- */
-@import "~/.config/settings/rofi-font.rasi"
+@import "~/.config/rofi/rofi-font.rasi"
 
 /* ---- Load pywal colors (custom wal template) ---- */
 @theme "~/.cache/wal/colors-rofi-pywal"
@@ -38,10 +38,10 @@ configuration {
 @import "~/.config/cache/current_wallpaper.rasi"
 
 /* ---- Load border width ---- */
-@import "~/.config/settings/rofi-border.rasi"
+@import "~/.config/rofi/rofi-border.rasi"
 
 /* ---- Load border radius ---- */
-@import "~/.config/settings/rofi-border-radius.rasi"
+@import "~/.config/rofi/rofi-border-radius.rasi"
 
 // Main //
 window {
