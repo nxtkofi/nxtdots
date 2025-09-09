@@ -12,12 +12,12 @@ fi
 # -----------------------------------------------------
 
 force_generate=0
-generatedversions="$HOME/.config/cache/wallpaper-generated"
-waypaperrunning=$HOME/.config/cache/waypaper-running
-cachefile="$HOME/.config/cache/current_wallpaper"
-blurredwallpaper="$HOME/.config/cache/blurred_wallpaper.png"
-squarewallpaper="$HOME/.config/cache/square_wallpaper.png"
-rasifile="$HOME/.config/cache/current_wallpaper.rasi"
+generatedversions="$HOME/.cache/wallpaper/wallpaper-generated"
+waypaperrunning=$HOME/.cache/wallpaper/waypaper-running
+cachefile="$HOME/.cache/wallpaper/current_wallpaper"
+blurredwallpaper="$HOME/.cache/wallpaper/blurred_wallpaper.png"
+squarewallpaper="$HOME/.cache/wallpaper/square_wallpaper.png"
+rasifile="$HOME/.cache/wallpaper/current_wallpaper.rasi"
 defaultwallpaper="$HOME/wallpaper/default.jpg"
 wallpapereffect="off"
 blur="50x30"
