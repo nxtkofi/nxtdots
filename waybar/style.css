@@ -44,7 +44,6 @@
 #workspaces {
 	padding: 0 1px;
 	background-color: @workspaces;
-	;
 }
 
 button {
@@ -77,7 +76,7 @@ button.active label {
 }
 
 #windowcount label {
-	color: @main-bg;
+	color: @main-fg;
 }
 
 /* temperature */
@@ -232,7 +231,7 @@ button.active label {
 	border-radius: 16px;
 	padding: 0 19px 0 16px;
 	font-size: 20px;
-	color: @main-fmain-fgg;
+	color: @main-fg;
 	background-color: @main-bg;
 }
 
