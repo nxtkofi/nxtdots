@@ -18,7 +18,7 @@ modified waybar's style a little bit and added custom theme switching script.
 install.sh gets the necessary packages installed on Your system. Those are:
 - fzf
 - waybar 0.13.0 (0.14.0 has an issue rendering some things)
--
+- vesktop (vencord, walcord)
 
 For floating pacseek (windowrule is already configured in
 ~/.config/hypr/conf/windowrule.conf) You have to edit org.moson.pacseek.desktop
@@ -38,5 +38,19 @@ Exec=kitty --class Pacseek pacseek
 StartupNotify=false
 Terminal=false
 ```
+and also vesktop.desktop file(same dir as above) if You want to have custom vesktop icon:
+```
+[Desktop Entry]
+Name=Vesktop
+Exec=/usr/bin/vesktop %U
+Terminal=false
+Type=Application
+Icon=~/.config/assets/discord_custom.png
+StartupWMClass=vesktop
+GenericName=Internet Messenger
+Categories=Network;
+Keywords=discord;vencord;electron;chat;
+Comment=Vesktop is a custom Discord App aiming to give you better performance and improve linux support. Vencord comes pre-installed
+MimeType=x-scheme-handler/discord```
 
 

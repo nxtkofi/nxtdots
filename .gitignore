@@ -34,3 +34,9 @@
 !starship.toml
 
 !readme.md
+!assets/
+!assets/**
+
+!vesktop/
+!vesktop/themes
+!vesktop/themes/**
