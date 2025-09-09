@@ -85,9 +85,8 @@ $HOME/.config/settings/update-cava-gradient.sh
 
 # -----------------------------------------------------
 # Update Spicetify theme //TODO: Create spicetify config 
-# //TODO: Create vencord config
-# -----------------------------------------------------
 # pywal-spicetify text 
+walcord -i "$wallpaper" -t ~/.config/vesktop/themes/midnight-vesktop.template.css -o ~/.config/vesktop/themes/midnight-vesktop.theme.css 
 
 # -----------------------------------------------------
 # Update Pywalfox
