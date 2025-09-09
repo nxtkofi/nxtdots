@@ -1,6 +1,6 @@
 #!/bin/bash
 defaultwallpaper="$HOME/wallpaper/default.jpg"
-cachefile="$HOME/.config/cache/current_wallpaper"
+cachefile="$HOME/.cache/wallpaper/current_wallpaper"
 if [ -f "$cachefile" ]; then
     sed -i "s|~|$HOME|g" "$cachefile"
     wallpaper=$(cat $cachefile)

@@ -29,7 +29,7 @@ configuration {
 @import "~/.cache/wal/colors-rofi-pywal"
 
 /* ---- Load wallpaper ---- */
-@import "~/.config/cache/current_wallpaper.rasi"
+@import "~/.cache/wallpaper/current_wallpaper.rasi"
 
 /* ---- Load border width ---- */
 @import "~/.config/settings/rofi-border.rasi"
