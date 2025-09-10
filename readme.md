@@ -22,6 +22,7 @@ Spotify rice:
 - sudo chmod a+wr /opt/spotify/Apps -R
 one time:
 `spicetify config current_theme Sleek`
+`spicetify config sidebar_config 0`
 `spicetify apply`
 
 
