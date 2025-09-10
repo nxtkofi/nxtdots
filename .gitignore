@@ -40,3 +40,8 @@
 !vesktop/
 !vesktop/themes
 !vesktop/themes/**
+
+!spicetify/
+!spicetify/Themes
+!spicetify/Themes/Sleek
+!spicetify/Themes/Sleek/**
