@@ -25,6 +25,9 @@
 !settings/
 !settings/**
 
+!scripts/
+!scripts/**
+
 !fastfetch/
 !fastfetch/**
 
