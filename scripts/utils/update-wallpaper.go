@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 )
 
@@ -41,6 +42,19 @@ func UpdateWallpaper(newWallpaperFullFilePath string) error {
 		return err
 	}
 	err = UpdateSpicetify(colors, homeDir)
+
+	walcordUpdate := exec.Command("walcord", "-i", newWallpaperFullFilePath, "-t", "~/.config/vesktop/themes/midnight-vesktop.theme.css", "-o", "~/.config/vesktop/themes/midnight-vesktop.theme.css ")
+	err = walcordUpdate.Run()
+	if err != nil {
+		return err
+	}
+
+	swayncUpdate := exec.Command("swaync-client", "-rs")
+	err = swayncUpdate.Run()
+	if err != nil {
+		return err
+	}
+
 	// wallpaperFileName := splitWallPaperPath[len(splitWallPaperPath)-1]
 	return nil
 }
