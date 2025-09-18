@@ -6,18 +6,12 @@ import (
 	"strings"
 )
 
-func UpdateCavaGradient(cavaConfigPath string, allPywalColors []string) error {
-	var newColors []string
-	if len(allPywalColors) >= 4 {
-		newColors = allPywalColors[0:4]
-	} else {
-		return nil
-	}
-
+func UpdateCavaGradient(cavaConfigPath string, allPywalColors map[string]string) error {
 	cavaConfig, err := os.Open(cavaConfigPath)
 	if err != nil {
 		return err
 	}
+
 	defer cavaConfig.Close()
 
 	scanner := bufio.NewScanner(cavaConfig)
@@ -31,15 +25,15 @@ func UpdateCavaGradient(cavaConfigPath string, allPywalColors []string) error {
 
 	for i, line := range cavaConfigAsArray {
 		if strings.HasPrefix(line, "gradient_color_1") {
-			cavaConfigAsArray[i] = "gradient_color_1 = '" + newColors[1] + "'"
+			cavaConfigAsArray[i] = "gradient_color_1 = '" + allPywalColors["color1"] + "'"
 		}
 
 		if strings.HasPrefix(line, "gradient_color_2") {
-			cavaConfigAsArray[i] = "gradient_color_2 = '" + newColors[2] + "'"
+			cavaConfigAsArray[i] = "gradient_color_2 = '" + allPywalColors["color2"] + "'"
 		}
 
 		if strings.HasPrefix(line, "gradient_color_3") {
-			cavaConfigAsArray[i] = "gradient_color_3 = '" + newColors[3] + "'"
+			cavaConfigAsArray[i] = "gradient_color_3 = '" + allPywalColors["color3"] + "'"
 		}
 	}
 
