@@ -4,7 +4,7 @@ import (
 	"os/exec"
 )
 
-func Pywal(wallpaperFilePath string) error {
+func ExecPywal(wallpaperFilePath string) error {
 	cmd := exec.Command("gsettings", "get", "org.gnome.desktop.interface", "color-scheme")
 	output, err := cmd.Output()
 	if err != nil {
@@ -25,5 +25,4 @@ func Pywal(wallpaperFilePath string) error {
 		}
 	}
 	return nil
-
 }
