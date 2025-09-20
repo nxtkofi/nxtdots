@@ -1,3 +1,20 @@
+# Introduction
+Custom Linux rice and configuration files, optimized for speed, minimalism, and style.  
+Originally inspired by [ml4w's dotfiles](https://github.com/ml4w), but heavily modified - you'd never guess the origin now.
+
+---
+
+## ✨ Highlights
+
+- ✅ Waybar based on **Mechabar**, heavily customized
+- 🎨 Dynamic pywal-based theming
+- ⚡ Wallpaper switcher rewritten in **Go** — up to **17× faster**
+- 🧼 Cleanup of unused variables, consistent formatting
+- 🔀 Custom theme switcher
+- 🧪 Benchmarks comparing Shell vs Go
+
+---
+
 ## Quickstart
 ```sh
 git clone https://github.com/nxtkofi/nxtdots ~/.config/
@@ -6,6 +23,10 @@ chmod +x ./install.sh
 mkdir -p ~/.cache/wallpaper
 ./install.sh
 ```
+Make sure to visit [configuration section](#configuration) and download the
+necessary [requirements](#requirements)
+
+---
 
 ## Requirements
 
@@ -15,25 +36,51 @@ Packages:
 - vesktop (vencord, walcord)
 - spicetify-cli
 - python-pywal16
+- magick
 
-#### Commands:
-Spotify rice:
-- sudo chmod a+wr /opt/spotify
-- sudo chmod a+wr /opt/spotify/Apps -R
-one time:
-`spicetify config current_theme Sleek`
-`spicetify apply`
+--- 
 
+## 🧠 Background
 
-## Introduction
+This config started as a fork of ml4w’s dotfiles — I borrowed a lot of basics to get started.  
+Since then, the setup evolved significantly:
 
-Config was initially based on ml4w's dotfiles, grabbed a lot of basic stuff from
-him, however now You probably would've never guessed that it was based on it.
-Waybar is based on Mechabar, I added my own pywal-based themes and modified them
-(got rid of unused vars, basically same cleanup as I did in ml4w's case). I also
-modified waybar's style a little bit and added custom theme switching script.
+- Removed redundant scripts and variables
+- Created a **pywal-integrated theming system** for Waybar
+- Customized Waybar’s style and logic
+- Added **dynamic theme switching** with a script
 
-## Edited .desktop files
+> Today, it’s a completely independent and streamlined setup tailored for performance and aesthetic.
+
+---
+
+## 🚀 Why I Migrated Scripts to Go (and how I sped them up by ~94.2%)
+
+At some point I decided to rewrite core scripts in **Go**, primarily out of curiosity and for the challenge.  
+But the performance gains were a huge bonus.
+
+### 💥 Final Results
+
+The main script (wallpaper changer):
+
+| Method     | Speed Gain |
+|------------|------------|
+| `go run`   | ~15.5×     |
+| Binary     | ~17×       |
+
+And it's still clean, readable, and scalable for future additions.
+
+---
+
+## 🖼️ Preview
+
+![Waybar Theme Preview](./.github/assets/readme-img/2025-09-20-at-01-40-18.avif)
+
+---
+
+## Configuration
+
+### Edited .desktop files
 
 For floating pacseek (windowrule is already configured in
 ~/.config/hypr/conf/windowrule.conf) You have to edit org.moson.pacseek.desktop
@@ -86,6 +133,16 @@ Categories=Audio;Music;Player;AudioVideo;
 StartupWMClass=spotify          
 ```
 
+### Commands:
+Spotify rice:
+- sudo chmod a+wr /opt/spotify
+- sudo chmod a+wr /opt/spotify/Apps -R
+one time:
+`spicetify config current_theme Sleek`
+`spicetify apply`
+
+---
 ## Thanks
 Thanks to ml4w for providing such a great base for this ricing
 Big thanks to - https://www.reddit.com/r/unixporn/comments/1chv3tr/hyprland_everything_pywal/ (repo:https://github.com/magnusKue/wal-switcher/tree/master), he made pywal spicetifying easy!
+
