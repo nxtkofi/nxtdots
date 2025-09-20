@@ -19,14 +19,15 @@ func main() {
 	case "update-wallpaper":
 		err := utils.UpdateWallpaper(wallpaperArg)
 		returnOnErr(err)
-	case "update-spicetify":
-		homeDir, err := os.UserHomeDir()
-		returnOnErr(err)
-
-		colors, err := utils.GetPywalColors()
-		returnOnErr(err)
-
-		err = utils.UpdateSpicetify(colors, homeDir)
-
+		// case "update-spicetify":
+		// 	homeDir, err := os.UserHomeDir()
+		// 	returnOnErr(err)
+		//
+		// 	colors, err := utils.GetPywalColors()
+		// 	returnOnErr(err)
+		//
+		// 	err = utils.UpdateSpicetify(colors, homeDir)
+		//
+			// }
 	}
 }

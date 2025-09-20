@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -15,12 +14,6 @@ func UpdateWallpaper(newWallpaperFullFilePath string) error {
 
 	cavaConfigPath := homeDir + "/.config/cava/config"
 	cachePath := homeDir + "/.cache/wallpaper/"
-	useCache := false
-	fmt.Println(useCache)
-
-	if _, err := os.Stat(cachePath + "cached_wallpaper"); err == nil {
-		useCache = true
-	}
 
 	err = os.MkdirAll(filepath.Dir(cachePath+"wallpaper-generated/"), os.ModePerm)
 	if err != nil {
@@ -41,9 +34,13 @@ func UpdateWallpaper(newWallpaperFullFilePath string) error {
 	if err != nil {
 		return err
 	}
-	err = UpdateSpicetify(colors, homeDir)
 
-	walcordUpdate := exec.Command("walcord", "-i", newWallpaperFullFilePath, "-t", "~/.config/vesktop/themes/midnight-vesktop.theme.css", "-o", "~/.config/vesktop/themes/midnight-vesktop.theme.css ")
+	err = UpdateSpicetify(colors, homeDir)
+	if err != nil {
+		return err
+	}
+
+	walcordUpdate := exec.Command("walcord", "-i", newWallpaperFullFilePath, "-t", homeDir+"/.config/vesktop/themes/midnight-vesktop.template.css", "-o", homeDir+"/.config/vesktop/themes/midnight-vesktop.theme.css")
 	err = walcordUpdate.Run()
 	if err != nil {
 		return err
@@ -54,7 +51,7 @@ func UpdateWallpaper(newWallpaperFullFilePath string) error {
 	if err != nil {
 		return err
 	}
+	err = GetOrCreateWallpaperCache(homeDir, newWallpaperFullFilePath)
 
-	// wallpaperFileName := splitWallPaperPath[len(splitWallPaperPath)-1]
 	return nil
 }

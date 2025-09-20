@@ -25,15 +25,15 @@ func UpdateCavaGradient(cavaConfigPath string, allPywalColors map[string]string)
 
 	for i, line := range cavaConfigAsArray {
 		if strings.HasPrefix(line, "gradient_color_1") {
-			cavaConfigAsArray[i] = "gradient_color_1 = '" + allPywalColors["color1"] + "'"
+			cavaConfigAsArray[i] = "gradient_color_1 = " + allPywalColors["color1"] + ""
 		}
 
 		if strings.HasPrefix(line, "gradient_color_2") {
-			cavaConfigAsArray[i] = "gradient_color_2 = '" + allPywalColors["color2"] + "'"
+			cavaConfigAsArray[i] = "gradient_color_2 = " + allPywalColors["color2"] + ""
 		}
 
 		if strings.HasPrefix(line, "gradient_color_3") {
-			cavaConfigAsArray[i] = "gradient_color_3 = '" + allPywalColors["color3"] + "'"
+			cavaConfigAsArray[i] = "gradient_color_3 = " + allPywalColors["color3"] + ""
 		}
 	}
 
