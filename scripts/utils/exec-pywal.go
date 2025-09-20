@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"fmt"
 	"os/exec"
+	"strings"
 )
 
 func ExecPywal(wallpaperFilePath string) error {
@@ -10,16 +12,32 @@ func ExecPywal(wallpaperFilePath string) error {
 	if err != nil {
 		return err
 	}
+	colorscheme := strings.TrimSpace(string(output))
 
-	if string(output) == "'prefer-dark'" {
+	if colorscheme == "'prefer-dark'" {
+		fmt.Printf("prefer-darky")
 		cmd := exec.Command("wal", "-q", "-i", wallpaperFilePath)
 		_, err := cmd.Output()
 		if err != nil {
 			return err
 		}
-	} else if string(output) == "'prefer-light'" {
+	} else if colorscheme == "'prefer-light'" {
+		fmt.Printf("prefer-ligthy")
 		cmd := exec.Command("wal", "-q", "-l", "-i", wallpaperFilePath)
 		_, err := cmd.Output()
+		if err != nil {
+			return err
+		}
+	}
+	return resetKittyIfItsRunning()
+}
+
+func resetKittyIfItsRunning() error {
+	cmd := exec.Command("pgrep", "-x", "kitty")
+	err := cmd.Run()
+	if err != nil {
+		cmd := exec.Command("pkill", "-USR1", "-x", "kitty")
+		err := cmd.Run()
 		if err != nil {
 			return err
 		}

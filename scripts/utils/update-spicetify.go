@@ -8,8 +8,7 @@ import (
 )
 
 func UpdateSpicetify(pywalColors map[string]string, homeDir string) error {
-	//before  main               = 0c1c1c
-	pathToTheme := homeDir + "/.config/spicetify/Themes/Sleek/color_backup.ini"
+	pathToTheme := homeDir + "/.config/spicetify/Themes/Sleek/color.ini"
 	file, err := os.Open(pathToTheme)
 	if err != nil {
 		return err
