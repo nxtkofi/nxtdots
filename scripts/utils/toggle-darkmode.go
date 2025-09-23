@@ -2,6 +2,7 @@ package utils
 
 import (
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -29,6 +30,7 @@ func toggleThemeColor(prefersNewColorMode XDGColorScheme, currentWallpaperFullPa
 	colors, err := GetPywalColors()
 	ReturnOnErr(err)
 	UpdateSpicetify(colors, homeDir)
+	updateWalcord(homeDir)
 	resetKittyIfItsRunning()
 
 	themeDirPath := homeDir + "/.config/waybar/themes"
@@ -48,4 +50,12 @@ func toggleThemeColor(prefersNewColorMode XDGColorScheme, currentWallpaperFullPa
 			ReturnOnErr(err)
 		}
 	}
+}
+
+func updateWalcord(homeDir string) {
+	templatePath := homeDir + "/.config/vesktop/themes/midnight-vesktop.template.css"
+	outputPath := homeDir + "/.config/vesktop/themes/midnight-vesktop.theme.css"
+	cmd := exec.Command("walcord", "-t", templatePath, "-o", outputPath)
+	err := cmd.Run()
+	ReturnOnErr(err)
 }

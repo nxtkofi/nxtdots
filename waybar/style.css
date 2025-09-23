@@ -227,7 +227,7 @@ button.active label {
 
 /* power menu */
 
-#custom-power_menu {
+#custom-toggle_theme {
 	border-radius: 16px;
 	padding: 0 19px 0 16px;
 	font-size: 20px;
@@ -235,7 +235,7 @@ button.active label {
 	background-color: @main-bg;
 }
 
-#custom-power_menu:hover {
+#custom-toggle_theme:hover {
 	background-color: @hover-bg;
 }
 

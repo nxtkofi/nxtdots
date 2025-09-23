@@ -11,7 +11,8 @@
 	},
 
 	"custom/theme_switcher": {
-		"exec": "~/.config/waybar/scripts/handler.sh",
+		exec
+
 		// "exec-if":
 		// "exec-on-event":
 		// "hide-empty-text":
@@ -24,7 +25,6 @@
 		// "rotate":
 		"min-length": 3,
 		"max-length": 3,
-		"on-click": "~/.config/scripts/bin/main system-theme toggle",
 		// "on-click-middle":
 		// "on-scroll-up":
 		// "on-scroll-down":
