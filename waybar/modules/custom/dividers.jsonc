@@ -43,6 +43,10 @@
 		"format": "",
 		"tooltip": false
 	},
+	"custom/left_div#10": {
+		"format": "",
+		"tooltip": false
+	},
 
 	/*--------------------
 		right dividers

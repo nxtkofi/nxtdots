@@ -1,0 +1,30 @@
+{
+	"group/power_profiles": {
+		"orientation": "horizontal",
+		"modules": [
+			"power-profiles-daemon",
+			"tray",
+		],
+		"drawer": {
+			"transition-left-to-right": true
+		}
+	},
+
+	// Power Profiles Daemon
+	"power-profiles-daemon": {
+		"format": "{icon}",
+		"min-length": 3,
+		"max-length": 3,
+		"tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+		"tooltip": true,
+		"format-icons": {
+			"performance": "🚀",
+			"balanced": "⚖️",
+			"power-saver": "🔋"
+		}
+	},
+
+	"tray":{
+		"icon-size":21, "spacing": 10
+	}
+}
