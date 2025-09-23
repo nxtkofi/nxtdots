@@ -11,11 +11,10 @@
 	per-module styling
 ------------------------*/
 
-/* group-theme_switcher */
+/* group-power_profiles / power-profiles */
 
-#custom-theme_switcher {
-	border-radius: 16px 0px 0px 16px;
-	font-size: 20px;
+#power-profiles-daemon {
+	font-size: 18px;
 	color: @accent;
 	background-color: @main-bg;
 }
@@ -27,6 +26,11 @@
 #custom-right_div.9 {
 	color: @main-bg;
 	margin-right: 16px;
+}
+
+#custom-left_div.10 {
+	color: @main-bg;
+	margin-left: 8px;
 }
 
 /* #custom-user { */
@@ -231,6 +235,7 @@ button.active label {
 #custom-toggle_theme {
 	border-radius: 16px;
 	padding: 0 19px 0 16px;
+	margin-right: 8px;
 	font-size: 20px;
 	color: @main-fg;
 	background-color: @main-bg;
@@ -244,7 +249,7 @@ button.active label {
 	general styling
 ---------------------*/
 
-#custom-theme_switcher:hover,
+#power-profiles-daemon:hover,
 #idle_inhibitor:hover,
 #clock.date:hover,
 #network:hover,

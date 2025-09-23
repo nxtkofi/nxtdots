@@ -2,7 +2,7 @@
 	"custom/temperature": {
 		"exec": "~/.config/waybar/scripts/temperature.sh",
 		"exec-if": "test -x ~/.config/waybar/scripts/temperature.sh",
-		"interval": 1,
+		"interval": 4,
 		"return-type": "json",
 		"min-length": 8,
 		"max-length": 8
