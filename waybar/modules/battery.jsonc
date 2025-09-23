@@ -1,5 +1,6 @@
 {
 	"battery": {
+		"exec-if": "test -e /sys/class/power_supply/BAT*",
 		// "bat":
 		// "adapter":
 		// "design-capacity":
