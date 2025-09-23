@@ -5,29 +5,17 @@ import (
 	"scripts/utils"
 )
 
-func returnOnErr(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
 func main() {
 	utilArg := os.Args[1]
-	wallpaperArg := os.Args[2]
+	homeDir, err := os.UserHomeDir()
+	utils.ReturnOnErr(err)
 
 	switch utilArg {
 	case "update-wallpaper":
-		err := utils.UpdateWallpaper(wallpaperArg)
-		returnOnErr(err)
-		// case "update-spicetify":
-		// 	homeDir, err := os.UserHomeDir()
-		// 	returnOnErr(err)
-		//
-		// 	colors, err := utils.GetPywalColors()
-		// 	returnOnErr(err)
-		//
-		// 	err = utils.UpdateSpicetify(colors, homeDir)
-		//
-			// }
+		err := utils.UpdateWallpaper(os.Args[2], homeDir)
+		utils.ReturnOnErr(err)
+	case "system-theme":
+		err := utils.HandleThemeChange(os.Args[2], homeDir)
+		utils.ReturnOnErr(err)
 	}
 }

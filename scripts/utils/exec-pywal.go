@@ -1,46 +1,32 @@
 package utils
 
 import (
-	"fmt"
 	"os/exec"
-	"strings"
 )
 
-func ExecPywal(wallpaperFilePath string) error {
-	cmd := exec.Command("gsettings", "get", "org.gnome.desktop.interface", "color-scheme")
-	output, err := cmd.Output()
-	if err != nil {
-		return err
-	}
-	colorscheme := strings.TrimSpace(string(output))
+func ExecPywal(colorMode XDGColorScheme, wallpaperFilePath string) error {
 
-	if colorscheme == "'prefer-dark'" {
-		fmt.Printf("prefer-darky")
+	switch colorMode {
+	case "'prefer-dark'":
 		cmd := exec.Command("wal", "-q", "-i", wallpaperFilePath)
 		_, err := cmd.Output()
 		if err != nil {
 			return err
 		}
-	} else if colorscheme == "'prefer-light'" {
-		fmt.Printf("prefer-ligthy")
+	case "'prefer-light'":
 		cmd := exec.Command("wal", "-q", "-l", "-i", wallpaperFilePath)
 		_, err := cmd.Output()
 		if err != nil {
 			return err
 		}
 	}
-	return resetKittyIfItsRunning()
+	resetKittyIfItsRunning()
+	return nil
 }
 
-func resetKittyIfItsRunning() error {
-	cmd := exec.Command("pgrep", "-x", "kitty")
+func resetKittyIfItsRunning() {
+	cmd := exec.Command("pkill", "-SIGUSR1", "kitty")
 	err := cmd.Run()
-	if err != nil {
-		cmd := exec.Command("pkill", "-USR1", "-x", "kitty")
-		err := cmd.Run()
-		if err != nil {
-			return err
-		}
-	}
-	return nil
+
+	ReturnOnErr(err)
 }
