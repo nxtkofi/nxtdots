@@ -1,5 +1,6 @@
 {
 	"temperature": {
+		"exec-if": "test -r /sys/class/thermal/thermal_zone1/temp",
 		"thermal-zone": 1,
 		// "hwmon-path":
 		// "hwmon-path-abs":

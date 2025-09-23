@@ -1,5 +1,6 @@
 {
 	"backlight": {
+		"exec-if": "test -d /sys/class/backlight",
 		// "interval":
 		"format": "{icon} {percent}%",
 		"format-icons": [
