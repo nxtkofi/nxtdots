@@ -11,8 +11,7 @@
 	},
 
 	"custom/theme_switcher": {
-		exec
-
+		"exec": "~/.config/waybar/scripts/theme_switcher.sh",
 		// "exec-if":
 		// "exec-on-event":
 		// "hide-empty-text":

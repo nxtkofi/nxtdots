@@ -85,7 +85,8 @@ button.active label {
 	color: @temperature;
 }
 
-#temperature {
+#temperature,
+#custom-temperature {
 	background-color: @temperature;
 }
 
@@ -307,7 +308,8 @@ tooltip decoration {
 /* Reduce module height */
 #clock.time,
 #clock.date,
-#temperature {
+#temperature,
+#custom-temperature {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	min-height: 0;
