@@ -1,19 +1,22 @@
 *
 
 !.gitignore
+
 !hypr/
 !hypr/**
+
+hypr/conf/
 
 !bashrc/
 !bashrc/**
 
-!cava/
+cava/config
 !cava/**
 
 !waybar/
 !waybar/**
 
-!waypaper/
+waypaper/config.ini
 !waypaper/**
 
 !kitty/
@@ -22,10 +25,10 @@
 !rofi/
 !rofi/**
 
-!settings/
+settings/sddm/
 !settings/**
 
-!scripts/
+scripts/bin
 !scripts/**
 
 !fastfetch/
@@ -41,10 +44,8 @@
 !assets/**
 
 !vesktop/
-!vesktop/themes
-!vesktop/themes/**
+!vesktop/settings/
+!vesktop/settings/**
 
 !spicetify/
 !spicetify/Themes
-!spicetify/Themes/Sleek
-!spicetify/Themes/Sleek/**
