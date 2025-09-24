@@ -30,6 +30,7 @@ func toggleThemeColor(prefersNewColorMode XDGColorScheme, currentWallpaperFullPa
 	colors, err := GetPywalColors()
 	ReturnOnErr(err)
 	UpdateSpicetify(colors, homeDir)
+	updateGtkTheme(prefersNewColorMode)
 	updateWalcord(homeDir)
 	resetKittyIfItsRunning()
 
@@ -58,4 +59,19 @@ func updateWalcord(homeDir string) {
 	cmd := exec.Command("walcord", "-t", templatePath, "-o", outputPath)
 	err := cmd.Run()
 	ReturnOnErr(err)
+}
+
+//	NOTE: note that below function seems counter-intuitive.
+//
+// I don't understand it, I have failed to find an answer as to why this is the only config that works, I have no clue and no longer any desire to find an answer
+func updateGtkTheme(desiredColorScheme XDGColorScheme) {
+	if desiredColorScheme == PrefersDark {
+		cmd := exec.Command("gsettings", "set", "org.gnome.desktop.interface", "gtk-theme", "'Adwaita'")
+		err := cmd.Run()
+		ReturnOnErr(err)
+	} else {
+		cmd := exec.Command("gsettings", "set", "org.gnome.desktop.interface", "gtk-theme", "'Adwaita-dark'")
+		err := cmd.Run()
+		ReturnOnErr(err)
+	}
 }
