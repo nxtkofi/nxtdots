@@ -33,10 +33,14 @@ necessary [requirements](#requirements)
 Packages:
 - fzf
 - waybar 0.13.0 (0.14.0 has an issue rendering some things)
-- vesktop (vencord, walcord)
+- vesktop 
+- walcord
 - spicetify-cli
 - python-pywal16
 - magick
+- nmtui
+- bluetuith
+- power-profiles-daemon
 
 --- 
 
@@ -118,6 +122,11 @@ Comment=Vesktop is a custom Discord App aiming to give you better performance an
 MimeType=x-scheme-handler/discord
 ```
 
+>[!NOTE]
+> If you want Your vesktop to be transparent You have to turn on transparency
+> in vencord options. Open Vesktop -> Settings -> Vencord -> `Enable window transparency.`
+![vensktop transparent options](.github/assets/readme-img/vesktop_window_transparency.png)
+
 - spotify
 ```
 [Desktop Entry]
@@ -137,7 +146,8 @@ StartupWMClass=spotify
 Spotify rice:
 - sudo chmod a+wr /opt/spotify
 - sudo chmod a+wr /opt/spotify/Apps -R
-one time:
+One time:
+`sudo systemctl enable --now power-profiles-daemon`
 `spicetify config current_theme Sleek`
 `spicetify apply`
 
