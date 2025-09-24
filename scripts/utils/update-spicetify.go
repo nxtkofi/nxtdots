@@ -63,9 +63,7 @@ func UpdateSpicetify(pywalColors map[string]string, homeDir string) error {
 
 	output := strings.Join(configAsArray, "\n")
 	err = os.WriteFile(pathToTheme, []byte(output), 0644)
-	if err != nil {
-		return err
-	}
+	ReturnOnErr(err)
 
 	return nil
 }
