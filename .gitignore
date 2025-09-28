@@ -29,6 +29,7 @@ settings/sddm/
 !settings/**
 
 scripts/bin
+!scripts/
 !scripts/**
 
 !fastfetch/
