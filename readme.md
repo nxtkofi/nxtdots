@@ -1,3 +1,12 @@
+# Showdown
+
+## Waybar
+Dark theme:
+![Dark theme](./assets/readme-img/2025-09-28-at-23-25-33.avif)
+
+Light theme:
+![Light theme](/home/nxtdots/.config/assets/readme-img/2025-09-28-at-23-26-25.avif)
+
 # Introduction
 Custom Linux rice and configuration files, optimized for speed, minimalism, and style.  
 Originally inspired by [ml4w's dotfiles](https://github.com/ml4w), but heavily modified - you'd never guess the origin now.
@@ -6,7 +15,7 @@ Originally inspired by [ml4w's dotfiles](https://github.com/ml4w), but heavily m
 
 ## ✨ Highlights
 
-- ✅ Waybar based on **Mechabar**, heavily customized
+- ✅ Waybar based on **Mechabar**, heavily modified
 - 🎨 Dynamic pywal-based theming
 - ⚡ Wallpaper switcher rewritten in **Go** — up to **17× faster**
 - 🧼 Cleanup of unused variables, consistent formatting
@@ -18,9 +27,8 @@ Originally inspired by [ml4w's dotfiles](https://github.com/ml4w), but heavily m
 ## Quickstart
 ```sh
 git clone https://github.com/nxtkofi/nxtdots ~/.config/
-cd .config
-chmod +x ./install.sh
-mkdir -p ~/.cache/wallpaper
+cd .config/scripts
+chmod +x ./bin/main
 ./install.sh
 ```
 Make sure to visit [configuration section](#configuration) and download the
@@ -74,11 +82,11 @@ The main script (wallpaper changer):
 
 And it's still clean, readable, and scalable for future additions.
 
+![Waybar Theme Preview](./.github/assets/readme-img/2025-09-20-at-01-40-18.avif)
 ---
 
 ## 🖼️ Preview
 
-![Waybar Theme Preview](./.github/assets/readme-img/2025-09-20-at-01-40-18.avif)
 
 ---
 

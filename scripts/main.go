@@ -17,5 +17,7 @@ func main() {
 	case "system-theme":
 		err := utils.HandleThemeChange(os.Args[2], homeDir)
 		utils.ReturnOnErr(err)
+	case "install":
+		utils.Install()
 	}
 }
