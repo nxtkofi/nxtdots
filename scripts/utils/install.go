@@ -10,9 +10,9 @@ import (
 func Install() {
 	homedir, err := os.UserHomeDir()
 	ReturnOnErr(err)
+	yayCmd := exec.Command("yay", "-S", "fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "magick", "nmtui", "bluetuith", "power-profiles-daemon", "zen-browser-bin", "hyprland", "--no-confirm")
 	copyFromUsrShareToLocalAndPerformOverwrite("org.moson.pacseek.desktop", "Exec", "Exec=kitty --class Pacseek pacseek")
 	copyFromUsrShareToLocalAndPerformOverwrite("spotify.desktop", "Exec", "Exec="+homedir+"/.config/settings/launch-spotify.sh")
-	yayCmd := exec.Command("yay", "-S", "fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "magick", "nmtui", "bluetuith", "power-profiles-daemon", "zen-browser-bin", "hyprland", "--no-confirm")
 	err = yayCmd.Run()
 	ReturnOnErr(err)
 
