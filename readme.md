@@ -1,11 +1,29 @@
 # Showdown
+I've had a rather uncomfortable monitor placement at my job. The light would
+often come from behind a monitor and dark mode became tiring really fast for my
+eyes.
+That's when I knew what I needed from my dotfiles:
+- Altering themes between dark and light mode
+- Pywal, to make it pretty
+- Transparency on everything that can have transparency!
 
 ## Waybar
 Dark theme:
-![Dark theme](./assets/readme-img/2025-09-28-at-23-25-33.avif)
+![Dark theme](.github/assets/readme-img/2025-09-28-at-23-25-33.avif)
 
 Light theme:
-![Light theme](/home/nxtdots/.config/assets/readme-img/2025-09-28-at-23-26-25.avif)
+![Light theme](.github/assets/readme-img/2025-09-28-at-23-26-25.avif)
+
+Transparent apps
+![Translucent lightmode](.github/assets/readme-img/2025-09-29-at-21-08-42.avif)
+
+![Lightmode float](.github/assets/readme-img/2025-09-29-at-21-13-30.avif)
+
+Rofi-based power-menu
+![power-menu](.github//assets/readme-img/2025-09-29-at-21-19-19.avif)
+
+Hyprlock:
+![hyprlock](.github/assets/readme-img/2025-09-29-at-21-33-27.avif)
 
 # Introduction
 Custom Linux rice and configuration files, optimized for speed, minimalism, and style.  
@@ -27,12 +45,13 @@ Originally inspired by [ml4w's dotfiles](https://github.com/ml4w), but heavily m
 ## Quickstart
 ```sh
 git clone https://github.com/nxtkofi/nxtdots ~/.config/
-cd .config/scripts
-chmod +x ./bin/main
-./install.sh
+chmod +x .config/scripts/bin/main
+.config/scripts/bin/main install
 ```
-Make sure to visit [configuration section](#configuration) and download the
-necessary [requirements](#requirements)
+
+This installation script SHOULD work on a freshly installed arch system. It
+should download yay and the necessary packages for You.
+Howver, due to lack of time, **it was not yet tested**, therefore the script may not work properly.
 
 ---
 
@@ -48,6 +67,7 @@ Packages:
 - magick
 - nmtui
 - bluetuith
+- pacseek
 - power-profiles-daemon
 
 --- 

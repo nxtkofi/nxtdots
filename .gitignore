@@ -40,9 +40,12 @@ scripts/bin
 
 !starship.toml
 
+!assets
+
 !readme.md
-!assets/
-!assets/**
+!.github
+!.github/**
+!.github/assets/**
 
 !vesktop/
 !vesktop/settings/
