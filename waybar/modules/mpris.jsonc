@@ -2,7 +2,7 @@
 	"mpris": {
 		// "player":
 		// "ignored-players":
-		// "interval":
+		"interval": 2,
 		"format": "{player_icon} {title} - {artist}",
 		"format-paused": "{status_icon} {title} - {artist}",
 		"tooltip-format": "Playing: {title} - {artist}",

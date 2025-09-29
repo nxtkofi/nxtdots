@@ -86,11 +86,11 @@ body {
 
 	/* transparency/blur options */
 	/* NOTE: TO USE TRANSPARENCY/BLUR, YOU MUST HAVE TRANSPARENT BG COLORS. FOR EXAMPLE: --bg-4: hsla(220, 15%, 10%, 0.7); */
-	--transparency-tweaks: off;
+	--transparency-tweaks: on;
 	/* off: no changes, on: remove some elements for better transparency */
-	--remove-bg-layer: off;
+	--remove-bg-layer: on;
 	/* off: no changes, on: remove the base --bg-3 layer for use with window transparency (WILL OVERRIDE BACKGROUND IMAGE) */
-	--panel-blur: off;
+	--panel-blur: on;
 	/* off: no changes, on: blur the background of panels */
 	--blur-amount: 12px;
 	/* amount of blur */
@@ -130,15 +130,15 @@ body {
 	/* muted channels/chats and timestamps */
 
 	/* background and dark colors */
-	--bg-1: KEY(2, 1.0);
+	--bg-1: KEY(2, 0.7);
 	/* dark buttons when clicked */
-	--bg-2: KEY(2, 1.0);
+	--bg-2: KEY(2, 0.7);
 	/* dark buttons */
-	--bg-3: KEY(B, 1.0);
+	--bg-3: KEY(B, 0.7);
 	/* spacing, secondary elements */
-	--bg-4: KEY(B, 1.0);
+	--bg-4: KEY(B, 0.5);
 	/* main background color */
-	--hover: KEY(2, 0.5);
+	--hover: KEY(B, 0.7);
 	/* channels and buttons when hovered */
 	--active: KEY(2, 1.0);
 	/* channels and buttons when clicked or selected */

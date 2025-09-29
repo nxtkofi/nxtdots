@@ -10,7 +10,8 @@
 	------------*/
 
 	"modules-left": [
-		"group/theme_switcher",
+		"custom/left_div#10",
+		"group/power_profiles",
 		"custom/right_div#9",
 		"custom/left_div#1",
 		"hyprland/workspaces",
@@ -20,7 +21,7 @@
 	"modules-center": [
 		"hyprland/windowcount",
 		"custom/left_div#2",
-		"temperature",
+		"custom/temperature",
 		"custom/left_div#3",
 		"memory",
 		"custom/left_div#4",
@@ -49,7 +50,7 @@
 		"custom/left_div#8",
 		"battery",
 		"custom/left_inv#2",
-		"custom/power_menu"
+		"custom/toggle_theme"
 	],
 
 	/*-------------
