@@ -29,9 +29,10 @@ func Install() {
 			fmt.Println("AUR packages (vesktop, walcord, spicetify-cli, python-pywal16, zen-browser-bin, hyprland) need to be installed manually or with an AUR helper like yay")
 		}
 	}
+	ReturnOnErr(err)
+
 	copyFromUsrShareToLocalAndPerformOverwrite("org.moson.pacseek.desktop", "Exec", "Exec=kitty --class Pacseek pacseek")
 	copyFromUsrShareToLocalAndPerformOverwrite("spotify.desktop", "Exec", "Exec="+homedir+"/.config/settings/launch-spotify.sh")
-	ReturnOnErr(err)
 
 	chmodRecursiveCmd := exec.Command("sudo", "chmod", "-R", "a+wr", "/opt/spotify/Apps")
 	err = chmodRecursiveCmd.Run()
