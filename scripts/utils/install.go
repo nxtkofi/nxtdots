@@ -13,7 +13,7 @@ func Install() {
 	homedir, err := os.UserHomeDir()
 	ReturnOnErr(err)
 
-	packages := []string{"fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "magick", "nmtui", "bluetuith", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify"}
+	packages := []string{"fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "magick", "nmtui", "bluetuith", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek"}
 
 	if _, err := exec.LookPath("yay"); err == nil {
 		fmt.Println("Using yay for package installation...")
@@ -23,16 +23,18 @@ func Install() {
 		cmd.Stdin = os.Stdin
 		err = cmd.Run()
 	} else {
-		fmt.Println("yay not found, using pacman for official packages...")
-		officialPackages := []string{"fzf", "waybar", "imagemagick", "networkmanager", "power-profiles-daemon"}
-		args := append([]string{"pacman", "-S", "--noconfirm"}, officialPackages...)
-		cmd := exec.Command("sudo", args...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
-		err = cmd.Run()
-		if err == nil {
-			fmt.Println("AUR packages (vesktop, walcord, spicetify-cli, python-pywal16, zen-browser-bin, hyprland) need to be installed manually or with an AUR helper like yay")
+		fmt.Println("yay not found, attempting to install yay...")
+		if installYay() {
+			fmt.Println("yay installed successfully, installing all packages...")
+			cmd := exec.Command("yay", append([]string{"-S", "--no-confirm"}, packages...)...)
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+			cmd.Stdin = os.Stdin
+			err = cmd.Run()
+		} else {
+			fmt.Println("Failed to install yay. Cannot proceed with package installation.")
+			fmt.Println("Please install yay manually and run this script again.")
+			return
 		}
 	}
 	ReturnOnErr(err)
@@ -106,4 +108,44 @@ func copyFromUsrShareToLocalAndPerformOverwrite(ogFileName, keyString, replaceVa
 
 	err = os.WriteFile(localAppsDir+ogFileName, []byte(strings.Join(fileContent, "\n")), 0644)
 	ReturnOnErr(err)
+}
+
+func installYay() bool {
+	if os.Geteuid() == 0 {
+		fmt.Println("Cannot install yay as root. Need non-root user.")
+		return false
+	}
+
+	fmt.Println("Installing git and base-devel...")
+	cmd := exec.Command("sudo", "pacman", "-S", "--noconfirm", "git", "base-devel")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		fmt.Printf("Failed to install prerequisites: %v\n", err)
+		return false
+	}
+
+	fmt.Println("Cloning yay from AUR...")
+	cmd = exec.Command("git", "clone", "https://aur.archlinux.org/yay.git", "/tmp/yay-install")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		fmt.Printf("Failed to clone yay: %v\n", err)
+		return false
+	}
+
+	fmt.Println("Building and installing yay...")
+	cmd = exec.Command("makepkg", "-si", "--noconfirm")
+	cmd.Dir = "/tmp/yay-install"
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		fmt.Printf("Failed to build yay: %v\n", err)
+		return false
+	}
+
+	// Clean up
+	exec.Command("rm", "-rf", "/tmp/yay-install").Run()
+
+	return true
 }
