@@ -1,19 +1,22 @@
 *
 
 !.gitignore
+
 !hypr/
 !hypr/**
+
+hypr/conf/
 
 !bashrc/
 !bashrc/**
 
-!cava/
+cava/config
 !cava/**
 
 !waybar/
 !waybar/**
 
-!waypaper/
+waypaper/config.ini
 !waypaper/**
 
 !kitty/
@@ -22,8 +25,12 @@
 !rofi/
 !rofi/**
 
-!settings/
+settings/sddm/
 !settings/**
+
+scripts/bin
+!scripts/
+!scripts/**
 
 !fastfetch/
 !fastfetch/**
@@ -33,15 +40,18 @@
 
 !starship.toml
 
+!assets
+
 !readme.md
-!assets/
-!assets/**
+!.github
+!.github/**
+!.github/assets/**
 
 !vesktop/
-!vesktop/themes
-!vesktop/themes/**
+!vesktop/settings/
+!vesktop/settings/**
 
 !spicetify/
 !spicetify/Themes
-!spicetify/Themes/Sleek
-!spicetify/Themes/Sleek/**
+
+wlogout

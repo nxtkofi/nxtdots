@@ -1,12 +1,12 @@
 {
 	"custom/system_update": {
-		"exec": "~/.config/waybar/scripts/system-update.sh",
-		// "exec-if":
+		"exec": "timeout 10 ~/.config/waybar/scripts/system-update.sh",
+		"exec-if": "command -v pacman",
 		// "exec-on-event":
 		// "hide-empty-text":
 		"return-type": "json",
-		"interval": 3600,
-		// "restart-interval":
+		"interval": 7200,
+		"restart-interval": 10,
 		// "signal":
 		"format": "{}",
 		// "format-icons":
