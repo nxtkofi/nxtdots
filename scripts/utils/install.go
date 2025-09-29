@@ -2,6 +2,8 @@ package utils
 
 import (
 	"bufio"
+	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strings"
@@ -10,13 +12,27 @@ import (
 func Install() {
 	homedir, err := os.UserHomeDir()
 	ReturnOnErr(err)
-	yayCmd := exec.Command("yay", "-S", "fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "magick", "nmtui", "bluetuith", "power-profiles-daemon", "zen-browser-bin", "hyprland", "--no-confirm")
-	err = yayCmd.Run()
+
+	packages := []string{"fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "magick", "nmtui", "bluetuith", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify"}
+
+	if _, err := exec.LookPath("yay"); err == nil {
+		fmt.Println("Using yay for package installation...")
+		cmd := exec.Command("yay", append([]string{"-S", "--no-confirm"}, packages...)...)
+		err = cmd.Run()
+	} else {
+		fmt.Println("yay not found, using pacman for official packages...")
+		officialPackages := []string{"fzf", "waybar", "downgrade", "magick", "nmtui", "bluetuith", "power-profiles-daemon"}
+		cmd := exec.Command("sudo", append([]string{"pacman", "-S", "--no-confirm"}, officialPackages...)...)
+		err = cmd.Run()
+		if err == nil {
+			fmt.Println("AUR packages (vesktop, walcord, spicetify-cli, python-pywal16, zen-browser-bin, hyprland) need to be installed manually or with an AUR helper like yay")
+		}
+	}
 	copyFromUsrShareToLocalAndPerformOverwrite("org.moson.pacseek.desktop", "Exec", "Exec=kitty --class Pacseek pacseek")
 	copyFromUsrShareToLocalAndPerformOverwrite("spotify.desktop", "Exec", "Exec="+homedir+"/.config/settings/launch-spotify.sh")
 	ReturnOnErr(err)
 
-	chmodRecursiveCmd := exec.Command("sudo", "chmod", "a+wr", "/opt/spotify/Apps -R")
+	chmodRecursiveCmd := exec.Command("sudo", "chmod", "-R", "a+wr", "/opt/spotify/Apps")
 	err = chmodRecursiveCmd.Run()
 	ReturnOnErr(err)
 
@@ -36,19 +52,34 @@ func Install() {
 	err = spicetifyApply.Run()
 	ReturnOnErr(err)
 
-	runWaybar := exec.Command("waybar")
-	err = runWaybar.Run()
-	ReturnOnErr(err)
+	fmt.Println("Installation complete. You can now run 'waybar' to start waybar.")
 }
 
 func copyFromUsrShareToLocalAndPerformOverwrite(ogFileName, keyString, replaceValue string) {
 	homedir, err := os.UserHomeDir()
 	ReturnOnErr(err)
-	copyFile, err := os.Open("/usr/share/applications/" + ogFileName)
+
+	// Ensure local applications directory exists
+	localAppsDir := homedir + "/.local/share/applications/"
+	err = os.MkdirAll(localAppsDir, 0755)
 	ReturnOnErr(err)
-	newFile, err := os.Open(homedir + "/.local/share/applications/" + ogFileName)
+
+	// Copy file from /usr/share/applications to local
+	srcFile, err := os.Open("/usr/share/applications/" + ogFileName)
 	ReturnOnErr(err)
-	defer copyFile.Close()
+	defer srcFile.Close()
+
+	dstFile, err := os.Create(localAppsDir + ogFileName)
+	ReturnOnErr(err)
+	defer dstFile.Close()
+
+	_, err = io.Copy(dstFile, srcFile)
+	ReturnOnErr(err)
+	srcFile.Close()
+	dstFile.Close()
+
+	newFile, err := os.Open(localAppsDir + ogFileName)
+	ReturnOnErr(err)
 	defer newFile.Close()
 	scanner := bufio.NewScanner(newFile)
 	var fileContent []string
@@ -65,6 +96,6 @@ func copyFromUsrShareToLocalAndPerformOverwrite(ogFileName, keyString, replaceVa
 		}
 	}
 
-	err = os.WriteFile(newFile.Name(), []byte(strings.Join(fileContent, "\n")), 0644)
+	err = os.WriteFile(localAppsDir+ogFileName, []byte(strings.Join(fileContent, "\n")), 0644)
 	ReturnOnErr(err)
 }
