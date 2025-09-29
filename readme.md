@@ -7,7 +7,7 @@ That's when I knew what I needed from my dotfiles:
 - Pywal, to make it pretty
 - Transparency on everything that can have transparency!
 
-Video link: https://youtu.be/0m8tBRyuQBI
+Video link: https://youtu.be/SsukVcCuMVc
 
 ## Waybar
 
