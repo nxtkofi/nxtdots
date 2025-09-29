@@ -22,7 +22,8 @@ func Install() {
 	} else {
 		fmt.Println("yay not found, using pacman for official packages...")
 		officialPackages := []string{"fzf", "waybar", "downgrade", "magick", "nmtui", "bluetuith", "power-profiles-daemon"}
-		cmd := exec.Command("sudo", append([]string{"pacman", "-S", "--no-confirm"}, officialPackages...)...)
+		args := append([]string{"pacman", "-S", "--no-confirm"}, officialPackages...)
+		cmd := exec.Command("sudo", args...)
 		err = cmd.Run()
 		if err == nil {
 			fmt.Println("AUR packages (vesktop, walcord, spicetify-cli, python-pywal16, zen-browser-bin, hyprland) need to be installed manually or with an AUR helper like yay")
