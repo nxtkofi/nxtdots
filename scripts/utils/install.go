@@ -22,7 +22,7 @@ func Install() {
 	} else {
 		fmt.Println("yay not found, using pacman for official packages...")
 		officialPackages := []string{"fzf", "waybar", "downgrade", "magick", "nmtui", "bluetuith", "power-profiles-daemon"}
-		args := append([]string{"pacman", "-S", "--no-confirm"}, officialPackages...)
+		args := append([]string{"pacman", "-S"}, officialPackages...)
 		cmd := exec.Command("sudo", args...)
 		err = cmd.Run()
 		if err == nil {
