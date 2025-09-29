@@ -7,13 +7,17 @@ That's when I knew what I needed from my dotfiles:
 - Pywal, to make it pretty
 - Transparency on everything that can have transparency!
 
+Video link: https://youtu.be/0m8tBRyuQBI
+
 ## Waybar
+
 Dark theme:
 ![Dark theme](.github/assets/readme-img/2025-09-28-at-23-25-33.avif)
 
 Light theme:
 ![Light theme](.github/assets/readme-img/2025-09-28-at-23-26-25.avif)
 
+## Apps
 Transparent apps
 ![Translucent lightmode](.github/assets/readme-img/2025-09-29-at-21-08-42.avif)
 
