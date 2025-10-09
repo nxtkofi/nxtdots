@@ -13,11 +13,11 @@ func Install() {
 	homedir, err := os.UserHomeDir()
 	ReturnOnErr(err)
 
-	packages := []string{"fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "magick", "nmtui", "bluetuith", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek"}
+	packages := []string{"fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "imagemagick", "networkmanager", "bluetuith", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek"}
 
 	if _, err := exec.LookPath("yay"); err == nil {
 		fmt.Println("Using yay for package installation...")
-		cmd := exec.Command("yay", append([]string{"-S", "--no-confirm"}, packages...)...)
+		cmd := exec.Command("yay", append([]string{"-S", "--noconfirm"}, packages...)...)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
@@ -26,7 +26,7 @@ func Install() {
 		fmt.Println("yay not found, attempting to install yay...")
 		if installYay() {
 			fmt.Println("yay installed successfully, installing all packages...")
-			cmd := exec.Command("yay", append([]string{"-S", "--no-confirm"}, packages...)...)
+			cmd := exec.Command("yay", append([]string{"-S", "--noconfirm"}, packages...)...)
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr
 			cmd.Stdin = os.Stdin
@@ -40,7 +40,15 @@ func Install() {
 	ReturnOnErr(err)
 
 	copyFromUsrShareToLocalAndPerformOverwrite("org.moson.pacseek.desktop", "Exec", "Exec=kitty --class Pacseek pacseek")
-	copyFromUsrShareToLocalAndPerformOverwrite("spotify.desktop", "Exec", "Exec="+homedir+"/.config/settings/launch-spotify.sh")
+
+	// Check if launch-spotify.sh exists before setting it
+	launchSpotifyPath := homedir + "/.config/settings/launch-spotify.sh"
+	if _, err := os.Stat(launchSpotifyPath); os.IsNotExist(err) {
+		fmt.Printf("Warning: %s does not exist, using default spotify command\n", launchSpotifyPath)
+		copyFromUsrShareToLocalAndPerformOverwrite("spotify.desktop", "Exec", "Exec=spotify")
+	} else {
+		copyFromUsrShareToLocalAndPerformOverwrite("spotify.desktop", "Exec", "Exec="+launchSpotifyPath)
+	}
 
 	chmodRecursiveCmd := exec.Command("sudo", "chmod", "-R", "a+wr", "/opt/spotify/Apps")
 	err = chmodRecursiveCmd.Run()
@@ -74,8 +82,15 @@ func copyFromUsrShareToLocalAndPerformOverwrite(ogFileName, keyString, replaceVa
 	err = os.MkdirAll(localAppsDir, 0755)
 	ReturnOnErr(err)
 
+	// Check if source file exists
+	srcPath := "/usr/share/applications/" + ogFileName
+	if _, err := os.Stat(srcPath); os.IsNotExist(err) {
+		fmt.Printf("Warning: Source file %s does not exist, skipping...\n", srcPath)
+		return
+	}
+
 	// Copy file from /usr/share/applications to local
-	srcFile, err := os.Open("/usr/share/applications/" + ogFileName)
+	srcFile, err := os.Open(srcPath)
 	ReturnOnErr(err)
 	defer srcFile.Close()
 
@@ -97,6 +112,7 @@ func copyFromUsrShareToLocalAndPerformOverwrite(ogFileName, keyString, replaceVa
 	for scanner.Scan() {
 		fileContent = append(fileContent, scanner.Text())
 	}
+	ReturnOnErr(scanner.Err())
 
 	for i, line := range fileContent {
 		var split []string
@@ -106,7 +122,7 @@ func copyFromUsrShareToLocalAndPerformOverwrite(ogFileName, keyString, replaceVa
 		}
 	}
 
-	err = os.WriteFile(localAppsDir+ogFileName, []byte(strings.Join(fileContent, "\n")), 0644)
+	err = os.WriteFile(localAppsDir+ogFileName, []byte(strings.Join(fileContent, "\n")+"\n"), 0644)
 	ReturnOnErr(err)
 }
 
@@ -131,6 +147,7 @@ func installYay() bool {
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
 		fmt.Printf("Failed to clone yay: %v\n", err)
+		exec.Command("rm", "-rf", "/tmp/yay-install").Run()
 		return false
 	}
 
@@ -141,6 +158,7 @@ func installYay() bool {
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
 		fmt.Printf("Failed to build yay: %v\n", err)
+		exec.Command("rm", "-rf", "/tmp/yay-install").Run()
 		return false
 	}
 
