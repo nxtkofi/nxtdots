@@ -39,7 +39,6 @@ func UpdateWallpaper(newWallpaperFullFilePath, homeDir string) error {
 
 	swayncUpdate := exec.Command("swaync-client", "-rs")
 	err = swayncUpdate.Run()
-
 	ReturnOnErr(err)
 
 	err = GetOrCreateWallpaperCache(homeDir, newWallpaperFullFilePath)

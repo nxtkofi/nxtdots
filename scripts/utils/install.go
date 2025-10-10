@@ -13,7 +13,11 @@ func Install() {
 	homedir, err := os.UserHomeDir()
 	ReturnOnErr(err)
 
-	packages := []string{"kitty", "fzf", "waybar-git", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "imagemagick", "networkmanager", "bluetui", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek", "waypaper", "rofi", "hyprlock ", "hyprpape r", "nautil us", "fastfe tch", "star ship", "z oxide", "noto-fonts -emoji", "ttf-jetbrains-mo no-nerd", "ttf-firac ode-nerd", "nerd-fonts-fira-code", "NetworkManager"}
+	// Setup wallpapers and bashrc before package installation
+	setupWallpapers(homedir)
+	setupBashrc(homedir)
+
+	packages := []string{"kitty", "fzf", "waybar-git", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "imagemagick", "networkmanager", "bluetui", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek", "waypaper", "rofi", "hyprlock ", "hyprpape r", "nautil us", "fastfe tch", "star ship", "z oxide", "noto-fonts -emoji", "ttf-jetbrains-mo no-nerd", "ttf-firac ode-nerd", "nerd-fonts-fira-code", "NetworkManager", "swaync", "xdg-desktop-portal", "xdg-desktop-portal-gtk", "xdg-desktop-portal-hyprland", "sddm", "qt6-svg ", "qt6-virtualkeyboar d", "qt6-multimedia-ffmpeg"}
 
 	if _, err := exec.LookPath("yay"); err == nil {
 		fmt.Println("Using yay for package installation...")
@@ -73,6 +77,10 @@ func Install() {
 	spicetifyApply := exec.Command("spicetify", "apply")
 	err = spicetifyApply.Run()
 	ReturnOnErr(err)
+
+	installSddmTheme()
+	setupOneTimeCommands()
+	updateWaybarThemePaths(homedir)
 
 	fmt.Println("Installation complete. You can now run 'waybar' to start waybar.")
 }
@@ -170,4 +178,154 @@ func installYay() bool {
 	exec.Command("rm", "-rf", "/tmp/yay-install").Run()
 
 	return true
+}
+
+func installSddmTheme() {
+	fmt.Println("Installing SDDM Astronaut Theme...")
+
+	// Clone the theme repository
+	cloneTheme := exec.Command("sudo", "git", "clone", "-b", "master", "--depth", "1",
+		"https://github.com/keyitdev/sddm-astronaut-theme.git",
+		"/usr/share/sddm/themes/sddm-astronaut-theme")
+	err := cloneTheme.Run()
+	ReturnOnErr(err)
+
+	// Copy fonts
+	copyFonts := exec.Command("sudo", "cp", "-r",
+		"/usr/share/sddm/themes/sddm-astronaut-theme/Fonts/",
+		"/usr/share/fonts/")
+	err = copyFonts.Run()
+	ReturnOnErr(err)
+
+	// Configure SDDM theme
+	sddmConfig := `[Theme]
+Current=sddm-astronaut-theme`
+	err = os.WriteFile("/tmp/sddm.conf", []byte(sddmConfig), 0644)
+	ReturnOnErr(err)
+
+	copySddmConfig := exec.Command("sudo", "cp", "/tmp/sddm.conf", "/etc/sddm.conf")
+	err = copySddmConfig.Run()
+	ReturnOnErr(err)
+
+	// Configure virtual keyboard
+	virtKbdConfig := `[General]
+InputMethod=qtvirtualkeyboard`
+	err = os.WriteFile("/tmp/virtualkbd.conf", []byte(virtKbdConfig), 0644)
+	ReturnOnErr(err)
+
+	// Ensure sddm.conf.d directory exists
+	mkdirSddm := exec.Command("sudo", "mkdir", "-p", "/etc/sddm.conf.d")
+	err = mkdirSddm.Run()
+	ReturnOnErr(err)
+
+	copyVirtKbd := exec.Command("sudo", "cp", "/tmp/virtualkbd.conf", "/etc/sddm.conf.d/virtualkbd.conf")
+	err = copyVirtKbd.Run()
+	ReturnOnErr(err)
+
+	// Enable SDDM service
+	enableSddm := exec.Command("sudo", "systemctl", "enable", "sddm")
+	err = enableSddm.Run()
+	ReturnOnErr(err)
+
+	// Clean up temp files
+	os.Remove("/tmp/sddm.conf")
+	os.Remove("/tmp/virtualkbd.conf")
+
+	fmt.Println("SDDM Astronaut Theme has been installed and configured.")
+}
+
+func setupWallpapers(homedir string) {
+	fmt.Println("Setting up wallpapers...")
+
+	// Get current working directory (where the script is being run from)
+	wd, err := os.Getwd()
+	ReturnOnErr(err)
+
+	assetsWallpaperPath := wd + "/assets/wallpaper"
+	homeWallpaperPath := homedir + "/wallpaper"
+
+	// Check if source assets/wallpaper directory exists
+	if _, err := os.Stat(assetsWallpaperPath); os.IsNotExist(err) {
+		fmt.Printf("Warning: Assets wallpaper directory %s does not exist, skipping wallpaper setup\n", assetsWallpaperPath)
+		return
+	}
+
+	// Copy wallpaper directory from assets to home
+	copyWallpapers := exec.Command("cp", "-r", assetsWallpaperPath, homeWallpaperPath)
+	err = copyWallpapers.Run()
+	ReturnOnErr(err)
+
+	fmt.Printf("Wallpapers copied from %s to %s\n", assetsWallpaperPath, homeWallpaperPath)
+}
+
+func setupBashrc(homedir string) {
+	fmt.Println("Setting up .bashrc...")
+
+	bashrcContent := `for f in ~/.config/bashrc/*; do
+if [ ! -d $f ] ;then
+c=` + "`echo $f | sed -e \"s=.config/bashrc=.config/bashrc/custom=\"`" + `
+[[ -f $c ]] && source $c || source $f
+fi
+done`
+
+	bashrcPath := homedir + "/.bashrc"
+	err := os.WriteFile(bashrcPath, []byte(bashrcContent), 0644)
+	ReturnOnErr(err)
+
+	fmt.Printf(".bashrc created at %s\n", bashrcPath)
+}
+
+func setupOneTimeCommands() {
+	fmt.Println("Running one-time setup commands...")
+
+	// Set initial XDG color scheme to prefers-dark
+	setColorScheme := exec.Command("gsettings", "set", "org.gnome.desktop.interface", "color-scheme", "prefer-dark")
+	err := setColorScheme.Run()
+	ReturnOnErr(err)
+
+	// Enable SDDM service
+	enableSddm := exec.Command("sudo", "systemctl", "enable", "sddm")
+	err = enableSddm.Run()
+	ReturnOnErr(err)
+
+	// Enable NetworkManager service
+	enableNetworkManager := exec.Command("sudo", "systemctl", "enable", "NetworkManager")
+	err = enableNetworkManager.Run()
+	ReturnOnErr(err)
+
+	fmt.Println("One-time setup commands completed")
+}
+
+func updateWaybarThemePaths(homedir string) {
+	fmt.Println("Updating waybar theme paths...")
+
+	// Update dark theme
+	darkThemePath := homedir + "/.config/waybar/themes/nxtdots-pywal-dark.css"
+	updateCSSFilePath(darkThemePath, homedir)
+
+	// Update light theme
+	lightThemePath := homedir + "/.config/waybar/themes/nxtdots-pywal-light.css"
+	updateCSSFilePath(lightThemePath, homedir)
+
+	fmt.Println("Waybar theme paths updated")
+}
+
+func updateCSSFilePath(filePath, homedir string) {
+	// Read the file
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		fmt.Printf("Warning: Could not read %s, skipping path update\n", filePath)
+		return
+	}
+
+	// Replace hardcoded path with actual home directory
+	oldPath := "file:///home/nxtdots/.cache/wal/colors-waybar.css"
+	newPath := "file://" + homedir + "/.cache/wal/colors-waybar.css"
+	updatedContent := strings.ReplaceAll(string(content), oldPath, newPath)
+
+	// Write back to file
+	err = os.WriteFile(filePath, []byte(updatedContent), 0644)
+	ReturnOnErr(err)
+
+	fmt.Printf("Updated path in %s\n", filePath)
 }
