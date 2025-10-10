@@ -43,6 +43,7 @@ func UpdateWallpaper(newWallpaperFullFilePath, homeDir string) error {
 	ReturnOnErr(err)
 
 	err = GetOrCreateWallpaperCache(homeDir, newWallpaperFullFilePath)
+	ReturnOnErr(err)
 
 	return nil
 }
