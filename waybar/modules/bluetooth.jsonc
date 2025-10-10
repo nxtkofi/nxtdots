@@ -12,7 +12,7 @@
 		// "rotate":
 		"min-length": 2,
 		"max-length": 2,
-		"on-click": "kitty --class bluetuith-floating bluetuith",
+		"on-click": "kitty --class bluetui-floating bluetui",
 		// "on-click-middle":
 		"on-click-right": "bluetoothctl power off && notify-send 'Bluetooth Off' -r 1925",
 		// "on-scroll-up":
