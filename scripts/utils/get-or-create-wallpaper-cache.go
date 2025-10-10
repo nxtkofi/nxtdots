@@ -35,6 +35,13 @@ func readOrCreateBlurredWallpaper(homeDir, wallpaperFileName, wallPaperFullPath,
 	blur := "50x30"
 	sourcePath := homeDir + "/.cache/wallpaper/wallpaper-generated/blur-" + blur + "-" + wallpaperFileName + ".png"
 
+	// Ensure the wallpaper-generated directory exists
+	generatedDir := homeDir + "/.cache/wallpaper/wallpaper-generated/"
+	err := os.MkdirAll(generatedDir, 0755)
+	if err != nil {
+		return err
+	}
+
 	if _, err := os.Stat(sourcePath); err != nil {
 		cmd := exec.Command("magick", wallPaperFullPath, "-resize", "75%", destPath)
 		err = cmd.Run()
@@ -60,6 +67,13 @@ func readOrCreateBlurredWallpaper(homeDir, wallpaperFileName, wallPaperFullPath,
 func readOrCreateSquareWallpaper(homeDir, wallpaperFileName, wallpaperFullPath string) error {
 	sourcePath := homeDir + "/.cache/wallpaper/wallpaper-generated/square-" + wallpaperFileName + ".png"
 	destPath := homeDir + "/.cache/wallpaper/square_wallpaper.png"
+
+	// Ensure the wallpaper-generated directory exists
+	generatedDir := homeDir + "/.cache/wallpaper/wallpaper-generated/"
+	err := os.MkdirAll(generatedDir, 0755)
+	if err != nil {
+		return err
+	}
 
 	if _, err := os.Stat(sourcePath); err != nil {
 		cmd := exec.Command("magick", wallpaperFullPath, "-gravity", "Center", "-extent", "1:1", destPath)

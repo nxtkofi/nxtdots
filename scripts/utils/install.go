@@ -13,7 +13,7 @@ func Install() {
 	homedir, err := os.UserHomeDir()
 	ReturnOnErr(err)
 
-	packages := []string{"fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "imagemagick", "networkmanager", "bluetuith", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek"}
+	packages := []string{"kitty", "fzf", "waybar-git", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "imagemagick", "networkmanager", "bluetui", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek", "waypaper", "rofi", "hyprlock ", "hyprpape r", "nautil us", "fastfe tch", "star ship", "z oxide", "noto-fonts -emoji", "ttf-jetbrains-mo no-nerd", "ttf-firac ode-nerd", "nerd-fonts-fira-code", "NetworkManager"}
 
 	if _, err := exec.LookPath("yay"); err == nil {
 		fmt.Println("Using yay for package installation...")
@@ -60,6 +60,10 @@ func Install() {
 
 	powerProfileDaemonEnable := exec.Command("sudo", "systemctl", "enable", "--now", "power-profiles-daemon")
 	err = powerProfileDaemonEnable.Run()
+	ReturnOnErr(err)
+
+	spicetifyBackupCreate := exec.Command("spicetify", "backup", "apply")
+	err = spicetifyBackupCreate.Run()
 	ReturnOnErr(err)
 
 	spicetifyConfig := exec.Command("spicetify", "config", "current_theme", "Sleek")
