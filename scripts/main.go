@@ -19,5 +19,7 @@ func main() {
 		utils.ReturnOnErr(err)
 	case "install":
 		utils.Install()
+	case "rice-spotify":
+		utils.RiceSpotify()
 	}
 }
