@@ -10,8 +10,18 @@ import (
 )
 
 func Install() {
+	// Initialize logging
+	err := InitLogger()
+	if err != nil {
+		fmt.Printf("Warning: Could not initialize logging: %v\n", err)
+	}
+	defer CloseLogger()
+
 	homedir, err := os.UserHomeDir()
 	ReturnOnErr(err)
+
+	LogInfo("Starting installation process")
+	LogInfo(fmt.Sprintf("Home directory: %s", homedir))
 
 	// Setup wallpapers and bashrc before package installation
 	setupWallpapers(homedir)
@@ -20,32 +30,36 @@ func Install() {
 	packages := []string{"kitty", "fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "imagemagick", "bluetui", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek", "waypaper", "rofi", "hyprlock", "hyprpaper", "nautilus", "fastfetch", "starship", "zoxide", "noto-fonts-emoji", "ttf-jetbrains-mono-nerd", "ttf-firacode-nerd", "nerd-fonts-fira-code", "swaync", "xdg-desktop-portal", "xdg-desktop-portal-gtk", "xdg-desktop-portal-hyprland", "sddm", "qt6-svg", "qt6-virtualkeyboard", "qt6-multimedia-ffmpeg", "nvm"}
 
 	if _, err := exec.LookPath("yay"); err == nil {
-		fmt.Println("Using yay for package installation...")
+		LogInfo("Using yay for package installation")
 		cmd := exec.Command("yay", append([]string{"-S", "--noconfirm"}, packages...)...)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
+		LogCommand(fmt.Sprintf("yay -S --noconfirm %s", strings.Join(packages, " ")))
 		err = cmd.Run()
 	} else {
-		fmt.Println("yay not found, attempting to install yay...")
+		LogInfo("yay not found, attempting to install yay")
 		if installYay() {
-			fmt.Println("yay installed successfully, installing all packages...")
+			LogInfo("yay installed successfully, installing all packages")
 			cmd := exec.Command("yay", append([]string{"-S", "--noconfirm"}, packages...)...)
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr
 			cmd.Stdin = os.Stdin
+			LogCommand(fmt.Sprintf("yay -S --noconfirm %s", strings.Join(packages, " ")))
 			err = cmd.Run()
 		} else {
-			fmt.Println("Failed to install yay. Cannot proceed with package installation.")
-			fmt.Println("Please install yay manually and run this script again.")
+			LogError("Failed to install yay. Cannot proceed with package installation", nil)
+			LogInfo("Please install yay manually and run this script again")
 			return
 		}
 	}
 	ReturnOnErr(err)
 
+	LogInfo("Updating Waybar theme paths")
+	updateWaybarThemePaths(homedir)
+
 	copyFromUsrShareToLocalAndPerformOverwrite("org.moson.pacseek.desktop", "Exec", "Exec=kitty --class Pacseek pacseek")
 
-	// Check if launch-spotify.sh exists before setting it
 	launchSpotifyPath := homedir + "/.config/settings/launch-spotify.sh"
 	if _, err := os.Stat(launchSpotifyPath); os.IsNotExist(err) {
 		fmt.Printf("Warning: %s does not exist, using default spotify command\n", launchSpotifyPath)
@@ -54,34 +68,58 @@ func Install() {
 		copyFromUsrShareToLocalAndPerformOverwrite("spotify.desktop", "Exec", "Exec="+launchSpotifyPath)
 	}
 
+	LogInfo("Setting Spotify permissions")
 	chmodRecursiveCmd := exec.Command("sudo", "chmod", "-R", "a+wr", "/opt/spotify/Apps")
+	LogCommand("sudo chmod -R a+wr /opt/spotify/Apps")
 	err = chmodRecursiveCmd.Run()
 	ReturnOnErr(err)
 
 	chmodCmd := exec.Command("sudo", "chmod", "a+wr", "/opt/spotify")
+	LogCommand("sudo chmod a+wr /opt/spotify")
 	err = chmodCmd.Run()
 	ReturnOnErr(err)
 
+	LogInfo("Enabling power-profiles-daemon")
 	powerProfileDaemonEnable := exec.Command("sudo", "systemctl", "enable", "--now", "power-profiles-daemon")
+	LogCommand("sudo systemctl enable --now power-profiles-daemon")
 	err = powerProfileDaemonEnable.Run()
 	ReturnOnErr(err)
 
-	spicetifyBackupCreate := exec.Command("spicetify", "backup", "apply")
-	err = spicetifyBackupCreate.Run()
-	ReturnOnErr(err)
+	if _, err := os.Stat("/opt/spotify"); os.IsNotExist(err) {
+		LogError("Spotify not found, skipping spicetify configuration", err)
+	} else {
+		LogInfo("Configuring Spicetify")
+		spicetifyInitCmd := exec.Command("spicetify")
+		LogCommand("spicetify")
+		spicetifyInitCmd.Run()
 
-	spicetifyConfig := exec.Command("spicetify", "config", "current_theme", "Sleek")
-	err = spicetifyConfig.Run()
-	ReturnOnErr(err)
+		spicetifyBackupCreate := exec.Command("spicetify", "backup", "apply")
+		LogCommand("spicetify backup apply")
+		err = spicetifyBackupCreate.Run()
+		if err != nil {
+			LogError("Spicetify backup/apply failed, but continuing", err)
+		}
+		spicetifyConfig := exec.Command("spicetify", "config", "current_theme", "Sleek")
+		LogCommand("spicetify config current_theme Sleek")
+		err = spicetifyConfig.Run()
+		if err != nil {
+			LogError("Spicetify theme config failed, but continuing", err)
+		}
 
-	spicetifyApply := exec.Command("spicetify", "apply")
-	err = spicetifyApply.Run()
-	ReturnOnErr(err)
+		spicetifyApply := exec.Command("spicetify", "apply")
+		LogCommand("spicetify apply")
+		err = spicetifyApply.Run()
+		if err != nil {
+			LogError("Spicetify apply failed, but continuing", err)
+		}
+	}
 
+	LogInfo("Installing SDDM theme")
 	installSddmTheme()
+	LogInfo("Running one-time setup commands")
 	setupOneTimeCommands()
-	updateWaybarThemePaths(homedir)
 
+	LogInfo("Installation complete. You can now run 'waybar' to start waybar")
 	fmt.Println("Installation complete. You can now run 'waybar' to start waybar.")
 }
 
@@ -261,12 +299,13 @@ func setupWallpapers(homedir string) {
 func setupBashrc(homedir string) {
 	fmt.Println("Setting up .bashrc...")
 
-	bashrcContent := `for f in ~/.config/bashrc/*; do
-if [ ! -d $f ] ;then
-c=` + "`echo $f | sed -e \"s=.config/bashrc=.config/bashrc/custom=\"`" + `
-[[ -f $c ]] && source $c || source $f
-fi
-done`
+	bashrcContent := `
+	for f in ~/.config/bashrc/*; do
+		if [ ! -d $f ] ;then
+			c=` + "`echo $f | sed -e \"s=.config/bashrc=.config/bashrc/custom=\"`" + `
+				[[ -f $c ]] && source $c || source $f
+			fi
+	done`
 
 	bashrcPath := homedir + "/.bashrc"
 	err := os.WriteFile(bashrcPath, []byte(bashrcContent), 0644)
@@ -278,17 +317,14 @@ done`
 func setupOneTimeCommands() {
 	fmt.Println("Running one-time setup commands...")
 
-	// Set initial XDG color scheme to prefers-dark
 	setColorScheme := exec.Command("gsettings", "set", "org.gnome.desktop.interface", "color-scheme", "prefer-dark")
 	err := setColorScheme.Run()
 	ReturnOnErr(err)
 
-	// Enable SDDM service
 	enableSddm := exec.Command("sudo", "systemctl", "enable", "sddm")
 	err = enableSddm.Run()
 	ReturnOnErr(err)
 
-	// Enable NetworkManager service
 	enableNetworkManager := exec.Command("sudo", "systemctl", "enable", "NetworkManager")
 	err = enableNetworkManager.Run()
 	ReturnOnErr(err)
