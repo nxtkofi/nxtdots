@@ -115,7 +115,13 @@ Those packages will be automatically installed if You run install script:
 - qt6-virtualkeyboard 
 - qt6-multimedia-ffmpeg 
 - nvm
+- hypridle 
 
+Optional (still included in installation script):
+- rofimoji
+- ripgrep 
+- missioncenter 
+- nvim
 --- 
 
 ## 🧠 Background
