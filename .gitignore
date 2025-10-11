@@ -40,7 +40,8 @@ scripts/bin
 
 !starship.toml
 
-!assets
+!assets/
+!assets/**
 
 !readme.md
 !.github
