@@ -1,5 +1,5 @@
 /* nxtdots-pywal-dark */
-@import url("file:///home/nxtdots/.cache/wal/colors-waybar.css");
+@import url("../../.cache/wal/colors-waybar.css");
 
 @define-color red #f38ba8;
 @define-color yellow #f9e2af;
