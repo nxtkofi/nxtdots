@@ -21,5 +21,8 @@ func main() {
 		utils.Install()
 	case "rice-spotify":
 		utils.RiceSpotify()
+	case "restart-waybar":
+		err := utils.RestartWaybar()
+		utils.ReturnOnErr(err)
 	}
 }
