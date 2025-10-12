@@ -137,6 +137,7 @@ button.active label {
 /* idle inhibitor and time */
 
 #custom-right_inv.1 {
+	font-size:29px;
 	color: @time;
 }
 
@@ -227,6 +228,7 @@ button.active label {
 }
 
 #custom-left_inv.2 {
+	font-size:29px;
 	color: @battery;
 }
 
@@ -276,8 +278,11 @@ button.active label {
 	color: @hover-fg;
 }
 
+#custom-left_inv {
+	font-size:29px;
+}
+
 #custom-left_div,
-#custom-left_inv,
 #custom-right_div,
 #custom-right_inv {
 	font-size: 28px;

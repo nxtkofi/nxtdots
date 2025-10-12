@@ -43,33 +43,85 @@ Originally inspired by [ml4w's dotfiles](https://github.com/ml4w), but heavily m
 ---
 
 ## Quickstart
+
+### Fresh Arch Linux Installation
+
+⚠️ **IMPORTANT**: This script is designed for **fresh Arch Linux installations only**. Running on systems with existing dotfiles may cause conflicts.
+
 ```sh
+# Clone the repository
 git clone https://github.com/nxtkofi/nxtdots ~/.config/
-chmod +x .config/scripts/bin/main
-.config/scripts/bin/main install
+
+# Build the binary from source
+cd ~/.config/scripts && go build -o bin/main main.go
+
+# Run the installation (requires sudo access)
+~/.config/scripts/bin/main install
 ```
 
-This installation script SHOULD work on a freshly installed arch system. It
-should download yay and the necessary packages for You.
-Howver, due to lack of time, **it was not yet tested**, therefore the script may not work properly.
+### Requirements for Installation:
+- Fresh Arch Linux system
+- Internet connection
+- Sudo privileges
+- **DO NOT run as root user** (script will install yay which requires non-root)
+
+### What the script does:
+- Installs `yay` AUR helper if not present
+- Installs all required packages
+- Configures wallpapers, themes, and system services
+- Sets up SDDM login manager
+- Configures Waybar themes
+
+⚠️ **Warning**: Do not run the installation script multiple times on the same system as it may cause configuration conflicts.
 
 ---
 
 ## Requirements
 
-Packages:
-- fzf
-- waybar 0.13.0 (0.14.0 has an issue rendering some things)
+Those packages will be automatically installed if You run install script:
+- kitty 
+- fzf 
+- waybar 
+- downgrade 
 - vesktop 
-- walcord
-- spicetify-cli
-- python-pywal16
-- magick
-- nmtui
-- bluetuith
-- pacseek
-- power-profiles-daemon
+- walcord 
+- spicetifyli
+- python-pywal16 
+- imagemagick 
+- bluetui 
+- power-profiles-daemon 
+- zen-browser-bin 
+- hyprland 
+- spotify 
+- pacseek 
+- waypaper 
+- rofi 
+- hyprlock 
+- hyprpaper 
+- nautilus 
+- fastfetch 
+- starship 
+- zoxide 
+- noto-fonts-emoji
+- ttf-jetbrains-mono-nerd 
+- ttf-firacode-nerd 
+- nerd-fonts-fira-code 
+- swaync 
+- xdg-desktop-portal 
+- xdg-desktop-portal-gtk 
+- xdg-desktop-portal-hyprland 
+- sddm 
+- qt6-svg 
+- qt6-virtualkeyboard 
+- qt6-multimedia-ffmpeg 
+- nvm
+- hypridle 
 
+Optional (still included in installation script):
+- rofimoji
+- ripgrep 
+- missioncenter 
+- nvim
 --- 
 
 ## 🧠 Background
@@ -105,79 +157,33 @@ And it's still clean, readable, and scalable for future additions.
 ![Waybar Theme Preview](./.github/assets/readme-img/2025-09-20-at-01-40-18.avif)
 ---
 
-## 🖼️ Preview
-
-
----
-
-## Configuration
-
-### Edited .desktop files
-
-For floating pacseek (windowrule is already configured in
-~/.config/hypr/conf/windowrule.conf) You have to edit org.moson.pacseek.desktop
-file that's located in /usr/share/applications directory like so:
-- pacseek
-```.config
-[Desktop Entry]
-
-Name=pacseek
-Comment=A terminal user interface for searching and installing Arch Linux packages
-
-Icon=pacseek
-Type=Application
-Categories=Utility;
-Keywords=terminal;package;
-
-Exec=kitty --class Pacseek pacseek
-StartupNotify=false
-Terminal=false
-```
-
-- vesktop
-```
-[Desktop Entry]
-Name=Vesktop
-Exec=/usr/bin/vesktop %U
-Terminal=false
-Type=Application
-Icon=/home/<your-profile>/.config/assets/discord_custom.png
-StartupWMClass=vesktop
-GenericName=Internet Messenger
-Categories=Network;
-Keywords=discord;vencord;electron;chat;
-Comment=Vesktop is a custom Discord App aiming to give you better performance and improve linux support. Vencord comes pre-installed
-MimeType=x-scheme-handler/discord
-```
-
 >[!NOTE]
 > If you want Your vesktop to be transparent You have to turn on transparency
 > in vencord options. Open Vesktop -> Settings -> Vencord -> `Enable window transparency.`
 ![vensktop transparent options](.github/assets/readme-img/vesktop_window_transparency.png)
 
-- spotify
-```
-[Desktop Entry]
-Type=Application
-Name=Spotify
-GenericName=Music Player
-Icon=spotify-client
-TryExec=spotify
-Exec=/home/<your-profile>/.config/settings/launch-spotify.sh
-Terminal=false
-MimeType=x-scheme-handler/spotify;
-Categories=Audio;Music;Player;AudioVideo;
-StartupWMClass=spotify          
+### Commands:
+
+#### Spotify Rice Setup:
+
+⚠️ **PREREQUISITES**: Before running the Spotify rice script:
+1. **Launch Spotify** and **log in** to your account
+2. **Close Spotify** completely
+3. Only then run the rice script
+
+```sh
+# After Spotify is installed and you've logged in at least once:
+~/.config/scripts/bin/main rice-spotify
 ```
 
-### Commands:
-Spotify rice:
-- sudo chmod a+wr /opt/spotify
-- sudo chmod a+wr /opt/spotify/Apps -R
-One time:
-`sudo systemctl enable --now power-profiles-daemon`
-`spicetify config current_theme Sleek`
-`spicetify apply`
+Manual commands (if needed):
+- `sudo chmod a+wr /opt/spotify`
+- `sudo chmod a+wr /opt/spotify/Apps -R`
+
+One time setup:
+- `sudo systemctl enable --now power-profiles-daemon`
+- `spicetify config current_theme Sleek`
+- `spicetify apply`
 
 ---
 ## Thanks

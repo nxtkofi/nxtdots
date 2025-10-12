@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"os"
@@ -10,38 +9,84 @@ import (
 )
 
 func Install() {
+	err := InitLogger()
+	if err != nil {
+		fmt.Printf("Warning: Could not initialize logging: %v\n", err)
+	}
+	defer CloseLogger()
+
 	homedir, err := os.UserHomeDir()
 	ReturnOnErr(err)
 
-	packages := []string{"kitty", "fzf", "waybar-git", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "imagemagick", "networkmanager", "bluetui", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek", "waypaper", "rofi", "hyprlock ", "hyprpape r", "nautil us", "fastfe tch", "star ship", "z oxide", "noto-fonts -emoji", "ttf-jetbrains-mo no-nerd", "ttf-firac ode-nerd", "nerd-fonts-fira-code", "NetworkManager"}
+	LogInfo("Starting installation process")
+	LogInfo(fmt.Sprintf("Home directory: %s", homedir))
+
+	setupWallpapers(homedir)
+	setupBashrc(homedir)
+
+	packages := []string{"kitty", "fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "imagemagick", "bluetui", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek", "waypaper", "rofi", "hyprlock", "hyprpaper", "nautilus", "fastfetch", "starship", "zoxide", "noto-fonts-emoji", "ttf-jetbrains-mono-nerd", "ttf-firacode-nerd", "nerd-fonts-fira-code", "swaync", "xdg-desktop-portal", "xdg-desktop-portal-gtk", "xdg-desktop-portal-hyprland", "sddm", "qt6-svg", "qt6-virtualkeyboard", "qt6-multimedia-ffmpeg", "nvm", "hypridle", "rofimoji", "ripgrep", "missioncenter", "nvim", "wl-clipboard", "cliphist", "brightnessctl", "jq"}
 
 	if _, err := exec.LookPath("yay"); err == nil {
-		fmt.Println("Using yay for package installation...")
+		LogInfo("Using yay for package installation")
 		cmd := exec.Command("yay", append([]string{"-S", "--noconfirm"}, packages...)...)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
+		LogCommand(fmt.Sprintf("yay -S --noconfirm %s", strings.Join(packages, " ")))
 		err = cmd.Run()
 	} else {
-		fmt.Println("yay not found, attempting to install yay...")
+		LogInfo("yay not found, attempting to install yay")
 		if installYay() {
-			fmt.Println("yay installed successfully, installing all packages...")
+			LogInfo("yay installed successfully, installing all packages")
 			cmd := exec.Command("yay", append([]string{"-S", "--noconfirm"}, packages...)...)
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr
 			cmd.Stdin = os.Stdin
+			LogCommand(fmt.Sprintf("yay -S --noconfirm %s", strings.Join(packages, " ")))
 			err = cmd.Run()
 		} else {
-			fmt.Println("Failed to install yay. Cannot proceed with package installation.")
-			fmt.Println("Please install yay manually and run this script again.")
+			LogError("Failed to install yay. Cannot proceed with package installation", nil)
+			LogInfo("Please install yay manually and run this script again")
 			return
 		}
 	}
 	ReturnOnErr(err)
 
-	copyFromUsrShareToLocalAndPerformOverwrite("org.moson.pacseek.desktop", "Exec", "Exec=kitty --class Pacseek pacseek")
+	LogInfo("Updating Waybar theme paths")
+	updateWaybarThemePaths(homedir)
+	updateWaybarMainTheme(homedir)
 
-	// Check if launch-spotify.sh exists before setting it
+	copyFromUsrShareToLocalAndPerformOverwrite("org.moson.pacseek.desktop", "Exec", "Exec=kitty --class Pacseek pacseek")
+	copyFromUsrShareToLocalAndPerformOverwrite("org.moson.pacseek.desktop", "Terminal", "Terminal=false")
+
+	LogInfo("Enabling power-profiles-daemon")
+	powerProfileDaemonEnable := exec.Command("sudo", "systemctl", "enable", "--now", "power-profiles-daemon")
+	LogCommand("sudo systemctl enable --now power-profiles-daemon")
+	err = powerProfileDaemonEnable.Run()
+	ReturnOnErr(err)
+
+	LogInfo("Installing SDDM theme")
+	installSddmTheme()
+	LogInfo("Running one-time setup commands")
+	setupOneTimeCommands()
+
+	LogInfo("Installation complete. You can now run 'waybar' to start waybar")
+	fmt.Println("Installation complete. You can now run 'waybar' to start waybar.")
+}
+
+func RiceSpotify() {
+	err := InitLogger()
+	if err != nil {
+		fmt.Printf("Warning: Could not initialize logging: %v\n", err)
+	}
+	defer CloseLogger()
+
+	homedir, err := os.UserHomeDir()
+	ReturnOnErr(err)
+
+	LogInfo("Starting Spotify ricing process")
+	LogInfo(fmt.Sprintf("Home directory: %s", homedir))
+
 	launchSpotifyPath := homedir + "/.config/settings/launch-spotify.sh"
 	if _, err := os.Stat(launchSpotifyPath); os.IsNotExist(err) {
 		fmt.Printf("Warning: %s does not exist, using default spotify command\n", launchSpotifyPath)
@@ -50,83 +95,100 @@ func Install() {
 		copyFromUsrShareToLocalAndPerformOverwrite("spotify.desktop", "Exec", "Exec="+launchSpotifyPath)
 	}
 
+	LogInfo("Setting Spotify permissions")
 	chmodRecursiveCmd := exec.Command("sudo", "chmod", "-R", "a+wr", "/opt/spotify/Apps")
+	LogCommand("sudo chmod -R a+wr /opt/spotify/Apps")
 	err = chmodRecursiveCmd.Run()
 	ReturnOnErr(err)
 
 	chmodCmd := exec.Command("sudo", "chmod", "a+wr", "/opt/spotify")
+	LogCommand("sudo chmod a+wr /opt/spotify")
 	err = chmodCmd.Run()
 	ReturnOnErr(err)
 
-	powerProfileDaemonEnable := exec.Command("sudo", "systemctl", "enable", "--now", "power-profiles-daemon")
-	err = powerProfileDaemonEnable.Run()
-	ReturnOnErr(err)
+	if _, err := os.Stat("/opt/spotify"); os.IsNotExist(err) {
+		LogError("Spotify not found, skipping spicetify configuration", err)
+		return
+	}
+
+	LogInfo("Configuring Spicetify")
+	spicetifyInitCmd := exec.Command("spicetify")
+	LogCommand("spicetify")
+	spicetifyInitCmd.Run()
 
 	spicetifyBackupCreate := exec.Command("spicetify", "backup", "apply")
+	LogCommand("spicetify backup apply")
 	err = spicetifyBackupCreate.Run()
-	ReturnOnErr(err)
+	if err != nil {
+		LogError("Spicetify backup/apply failed, but continuing", err)
+	}
 
 	spicetifyConfig := exec.Command("spicetify", "config", "current_theme", "Sleek")
+	LogCommand("spicetify config current_theme Sleek")
 	err = spicetifyConfig.Run()
-	ReturnOnErr(err)
+	if err != nil {
+		LogError("Spicetify theme config failed, but continuing", err)
+	}
 
 	spicetifyApply := exec.Command("spicetify", "apply")
+	LogCommand("spicetify apply")
 	err = spicetifyApply.Run()
-	ReturnOnErr(err)
+	if err != nil {
+		LogError("Spicetify apply failed, but continuing", err)
+	}
 
-	fmt.Println("Installation complete. You can now run 'waybar' to start waybar.")
+	LogInfo("Spotify ricing complete")
+	fmt.Println("Spotify ricing complete")
 }
 
 func copyFromUsrShareToLocalAndPerformOverwrite(ogFileName, keyString, replaceValue string) {
 	homedir, err := os.UserHomeDir()
 	ReturnOnErr(err)
 
-	// Ensure local applications directory exists
 	localAppsDir := homedir + "/.local/share/applications/"
 	err = os.MkdirAll(localAppsDir, 0755)
 	ReturnOnErr(err)
 
-	// Check if source file exists
-	srcPath := "/usr/share/applications/" + ogFileName
-	if _, err := os.Stat(srcPath); os.IsNotExist(err) {
-		fmt.Printf("Warning: Source file %s does not exist, skipping...\n", srcPath)
+	dstPath := localAppsDir + ogFileName
+
+	if _, err := os.Stat(dstPath); os.IsNotExist(err) {
+		srcPath := "/usr/share/applications/" + ogFileName
+		if _, err := os.Stat(srcPath); os.IsNotExist(err) {
+			fmt.Printf("Warning: Source file %s does not exist, skipping...\n", srcPath)
+			return
+		}
+
+		srcFile, err := os.Open(srcPath)
+		ReturnOnErr(err)
+		defer srcFile.Close()
+
+		dstFile, err := os.Create(dstPath)
+		ReturnOnErr(err)
+		defer dstFile.Close()
+
+		_, err = io.Copy(dstFile, srcFile)
+		ReturnOnErr(err)
+		srcFile.Close()
+		dstFile.Close()
+	}
+
+	content, err := os.ReadFile(dstPath)
+	if err != nil {
+		fmt.Printf("Warning: Could not read %s, skipping...\n", dstPath)
 		return
 	}
 
-	// Copy file from /usr/share/applications to local
-	srcFile, err := os.Open(srcPath)
-	ReturnOnErr(err)
-	defer srcFile.Close()
+	lines := strings.Split(string(content), "\n")
 
-	dstFile, err := os.Create(localAppsDir + ogFileName)
-	ReturnOnErr(err)
-	defer dstFile.Close()
-
-	_, err = io.Copy(dstFile, srcFile)
-	ReturnOnErr(err)
-	srcFile.Close()
-	dstFile.Close()
-
-	newFile, err := os.Open(localAppsDir + ogFileName)
-	ReturnOnErr(err)
-	defer newFile.Close()
-	scanner := bufio.NewScanner(newFile)
-	var fileContent []string
-
-	for scanner.Scan() {
-		fileContent = append(fileContent, scanner.Text())
-	}
-	ReturnOnErr(scanner.Err())
-
-	for i, line := range fileContent {
+	for i, line := range lines {
 		var split []string
 		split = strings.Split(line, "=")
-		if strings.TrimSpace(split[0]) == keyString {
-			fileContent[i] = replaceValue
+		if len(split) >= 1 && strings.TrimSpace(split[0]) == keyString {
+			lines[i] = replaceValue
 		}
 	}
 
-	err = os.WriteFile(localAppsDir+ogFileName, []byte(strings.Join(fileContent, "\n")+"\n"), 0644)
+	err = os.WriteFile(dstPath, []byte(strings.Join(lines, "\n")), 0644)
 	ReturnOnErr(err)
 }
 
@@ -166,8 +228,171 @@ func installYay() bool {
 		return false
 	}
 
-	// Clean up
 	exec.Command("rm", "-rf", "/tmp/yay-install").Run()
 
 	return true
+}
+
+func installSddmTheme() {
+	fmt.Println("Installing SDDM Astronaut Theme...")
+
+	themeDir := "/usr/share/sddm/themes/sddm-astronaut-theme"
+
+	if _, err := os.Stat(themeDir); err == nil {
+		fmt.Println("SDDM Astronaut Theme already exists, skipping clone...")
+	} else {
+		cloneTheme := exec.Command("sudo", "git", "clone", "-b", "master", "--depth", "1",
+			"https://github.com/keyitdev/sddm-astronaut-theme.git",
+			themeDir)
+		err := cloneTheme.Run()
+		ReturnOnErr(err)
+	}
+
+	copyFonts := exec.Command("sudo", "cp", "-r",
+		"/usr/share/sddm/themes/sddm-astronaut-theme/Fonts/",
+		"/usr/share/fonts/")
+	err := copyFonts.Run()
+	ReturnOnErr(err)
+
+	sddmConfig := `[Theme]
+Current=sddm-astronaut-theme`
+	err = os.WriteFile("/tmp/sddm.conf", []byte(sddmConfig), 0644)
+	ReturnOnErr(err)
+
+	copySddmConfig := exec.Command("sudo", "cp", "/tmp/sddm.conf", "/etc/sddm.conf")
+	err = copySddmConfig.Run()
+	ReturnOnErr(err)
+
+	virtKbdConfig := `[General]
+InputMethod=qtvirtualkeyboard`
+	err = os.WriteFile("/tmp/virtualkbd.conf", []byte(virtKbdConfig), 0644)
+	ReturnOnErr(err)
+
+	mkdirSddm := exec.Command("sudo", "mkdir", "-p", "/etc/sddm.conf.d")
+	err = mkdirSddm.Run()
+	ReturnOnErr(err)
+
+	copyVirtKbd := exec.Command("sudo", "cp", "/tmp/virtualkbd.conf", "/etc/sddm.conf.d/virtualkbd.conf")
+	err = copyVirtKbd.Run()
+	ReturnOnErr(err)
+
+	enableSddm := exec.Command("sudo", "systemctl", "enable", "sddm")
+	err = enableSddm.Run()
+	ReturnOnErr(err)
+
+	os.Remove("/tmp/sddm.conf")
+	os.Remove("/tmp/virtualkbd.conf")
+
+	fmt.Println("SDDM Astronaut Theme has been installed and configured.")
+}
+
+func setupWallpapers(homedir string) {
+	fmt.Println("Setting up wallpapers...")
+
+	wd, err := os.Getwd()
+	ReturnOnErr(err)
+
+	assetsWallpaperPath := wd + "/assets/wallpaper"
+	homeWallpaperPath := homedir + "/wallpaper"
+
+	if _, err := os.Stat(assetsWallpaperPath); os.IsNotExist(err) {
+		fmt.Printf("Warning: Assets wallpaper directory %s does not exist, skipping wallpaper setup\n", assetsWallpaperPath)
+		return
+	}
+
+	err = os.MkdirAll(homeWallpaperPath, 0755)
+	ReturnOnErr(err)
+
+	copyWallpapers := exec.Command("cp", "-r", assetsWallpaperPath+"/.", homeWallpaperPath+"/")
+	err = copyWallpapers.Run()
+	ReturnOnErr(err)
+
+	fmt.Printf("Wallpapers merged from %s to %s\n", assetsWallpaperPath, homeWallpaperPath)
+}
+
+func setupBashrc(homedir string) {
+	fmt.Println("Setting up .bashrc...")
+
+	bashrcLoop := `
+	for f in ~/.config/bashrc/*; do
+		if [ ! -d $f ] ;then
+			c=` + "`echo $f | sed -e \"s=.config/bashrc=.config/bashrc/custom=\"`" + `
+				[[ -f $c ]] && source $c || source $f
+			fi
+	done`
+
+	bashrcPath := homedir + "/.bashrc"
+
+	if _, err := os.Stat(bashrcPath); os.IsNotExist(err) {
+		err := os.WriteFile(bashrcPath, []byte(bashrcLoop), 0644)
+		ReturnOnErr(err)
+		fmt.Printf(".bashrc created at %s\n", bashrcPath)
+	} else {
+		content, err := os.ReadFile(bashrcPath)
+		ReturnOnErr(err)
+
+		contentStr := string(content)
+
+		if strings.Contains(contentStr, "~/.config/bashrc/*") {
+			fmt.Println(".bashrc already contains nxtdots configuration, skipping...")
+			return
+		}
+
+		updatedContent := contentStr + bashrcLoop
+		err = os.WriteFile(bashrcPath, []byte(updatedContent), 0644)
+		ReturnOnErr(err)
+		fmt.Printf("Added nxtdots configuration to existing .bashrc at %s\n", bashrcPath)
+	}
+}
+
+func setupOneTimeCommands() {
+	fmt.Println("Running one-time setup commands...")
+
+	setColorScheme := exec.Command("gsettings", "set", "org.gnome.desktop.interface", "color-scheme", "prefer-dark")
+	err := setColorScheme.Run()
+	ReturnOnErr(err)
+
+	enableNetworkManager := exec.Command("sudo", "systemctl", "enable", "NetworkManager")
+	err = enableNetworkManager.Run()
+	ReturnOnErr(err)
+
+	fmt.Println("One-time setup commands completed")
+}
+
+func updateWaybarThemePaths(homedir string) {
+	fmt.Println("Updating waybar theme paths...")
+
+	darkThemePath := homedir + "/.config/waybar/themes/nxtdots-pywal-dark.css"
+	updateCSSFilePath(darkThemePath, homedir)
+
+	lightThemePath := homedir + "/.config/waybar/themes/nxtdots-pywal-light.css"
+	updateCSSFilePath(lightThemePath, homedir)
+
+	fmt.Println("Waybar theme paths updated")
+}
+
+func updateCSSFilePath(filePath, homedir string) {
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		fmt.Printf("Warning: Could not read %s, skipping path update\n", filePath)
+		return
+	}
+
+	oldPath := "file:///home/nxtdots/.cache/wal/colors-waybar.css"
+	newPath := "file://" + homedir + "/.cache/wal/colors-waybar.css"
+	updatedContent := strings.ReplaceAll(string(content), oldPath, newPath)
+
+	err = os.WriteFile(filePath, []byte(updatedContent), 0644)
+	ReturnOnErr(err)
+
+	fmt.Printf("Updated path in %s\n", filePath)
+}
+
+func updateWaybarMainTheme(homedir string) {
+	fmt.Println("Updating main waybar theme path...")
+
+	mainThemePath := homedir + "/.config/waybar/theme.css"
+	updateCSSFilePath(mainThemePath, homedir)
+
+	fmt.Println("Main waybar theme path updated")
 }

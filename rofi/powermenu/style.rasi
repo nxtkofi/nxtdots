@@ -52,7 +52,7 @@ window {
     border-color:                 @color11;
     cursor:                      "default";
     background-color:		 transparent;
-    background-image:            url("/home/nxtdots/.cache/wallpaper/blurred_wallpaper.png", height);
+    background-image:            url("~/.cache/wallpaper/blurred_wallpaper.png", height);
 }
 
 /*****----- Main Box -----*****/

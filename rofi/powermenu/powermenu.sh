@@ -18,10 +18,10 @@ uptime="`uptime -p | sed -e 's/up //g'`"
 host=`hostname`
 
 # Options
-shutdown=''
+shutdown='󰐥'
 reboot=''
 lock=''
-suspend=''
+suspend='󰒲'
 logout='󰍃'
 yes='✅'
 no='❌'
@@ -39,7 +39,7 @@ confirm_cmd() {
 	rofi -dmenu \
 		-p 'Confirmation' \
 		-mesg 'Are you Sure?' \
-		-theme ${dir}/shared/confirm.rasi
+		-theme ${dir}/confirm.rasi
 }
 
 # Ask for confirmation
