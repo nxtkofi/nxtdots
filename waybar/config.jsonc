@@ -77,6 +77,6 @@
 	// "passthrough":
 	// "ipc":
 	// "id":
-	"reload_style_on_change": true
+	"reload_style_on_change": false
 	// "gtk-layer-shell":
 }
