@@ -51,6 +51,8 @@ func toggleThemeColor(prefersNewColorMode XDGColorScheme, currentWallpaperFullPa
 			ReturnOnErr(err)
 		}
 	}
+	err = RestartWaybar()
+	ReturnOnErr(err)
 }
 
 func updateWalcord(homeDir string) {

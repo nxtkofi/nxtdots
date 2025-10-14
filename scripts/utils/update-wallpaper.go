@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func UpdateWallpaper(newWallpaperFullFilePath, homeDir string) error {
+func UpdateWallpaper(newWallpaperFullFilePath, homeDir string) {
 	homeDir, err := os.UserHomeDir()
 	ReturnOnErr(err)
 	cavaConfigPath := homeDir + "/.config/cava/config"
@@ -23,7 +23,6 @@ func UpdateWallpaper(newWallpaperFullFilePath, homeDir string) error {
 
 	err = ExecPywal(colorScheme, newWallpaperFullFilePath)
 	colors, err := GetPywalColors()
-
 	ReturnOnErr(err)
 
 	err = UpdateCavaGradient(cavaConfigPath, colors)
@@ -44,5 +43,6 @@ func UpdateWallpaper(newWallpaperFullFilePath, homeDir string) error {
 	err = GetOrCreateWallpaperCache(homeDir, newWallpaperFullFilePath)
 	ReturnOnErr(err)
 
-	return nil
+	err = RestartWaybar()
+	ReturnOnErr(err)
 }

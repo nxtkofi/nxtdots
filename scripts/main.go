@@ -12,7 +12,7 @@ func main() {
 
 	switch utilArg {
 	case "update-wallpaper":
-		err := utils.UpdateWallpaper(os.Args[2], homeDir)
+		utils.UpdateWallpaper(os.Args[2], homeDir)
 		utils.ReturnOnErr(err)
 	case "system-theme":
 		err := utils.HandleThemeChange(os.Args[2], homeDir)
