@@ -116,9 +116,6 @@ button.active label {
 	background-color: @cpu;
 }
 
-#custom-left_inv.1 {
-	color: @cpu;
-}
 
 /* distro */
 
@@ -136,10 +133,7 @@ button.active label {
 
 /* idle inhibitor and time */
 
-#custom-right_inv.1 {
-	font-size:29px;
-	color: @time;
-}
+
 
 #idle_inhibitor {
 	background-color: @time;
@@ -227,10 +221,6 @@ button.active label {
 	background-color: @battery;
 }
 
-#custom-left_inv.2 {
-	font-size:29px;
-	color: @battery;
-}
 
 /* power menu */
 
@@ -278,14 +268,10 @@ button.active label {
 	color: @hover-fg;
 }
 
-#custom-left_inv {
-	font-size:29px;
-}
-
 #custom-left_div,
-#custom-right_div,
-#custom-right_inv {
-	font-size: 28px;
+#custom-right_div
+{
+	font-size: 31px;
 }
 
 /* outline */
@@ -323,4 +309,25 @@ tooltip decoration {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	min-height: 0;
+}
+
+#custom-left_inv.1 {
+	color: @cpu;
+}
+#custom-right_inv.1 {
+	/* font-size:29px; */
+	color: @time;
+}
+
+#custom-left_inv.2 {
+	/* font-size:29px; */
+	color: @battery;
+}
+
+/* #custom-left_inv { */
+/* 	font-size:29px; */
+/* } */
+#custom-left_inv,
+#custom-right_inv {
+	font-size:32px;
 }
