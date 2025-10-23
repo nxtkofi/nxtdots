@@ -1,10 +1,7 @@
 /**
- *
- * Author : Aditya Shakya (adi1090x)
- * Github : @adi1090x
- * 
- * Rofi Theme File
- * Rofi Version: 1.7.3
+ * Modern Confirmation Dialog
+ * Integrated with pywal colors
+ * Features: Clean design, glassmorphism, smooth transitions
  **/
 
 /*****----- Configuration -----*****/
@@ -12,25 +9,38 @@ configuration {
     show-icons:                 false;
 }
 
+@theme "~/.cache/wal/colors-rofi-pywal"
+
 /*****----- Global Properties -----*****/
-@import "../rofi-font.rasi"
-@theme  "~/.cache/wal/colors-rofi-pywal"
+* {
+    background-window:           rgba(13, 31, 31, 0.95);
+    background-element:          rgba(255, 255, 255, 0.08);
+    background-selected:         @color4;
+    background-cancel:           @color1;
+
+    prompt-font:                 "JetBrainsMono Nerd Font Bold 16";
+    message-font:                "JetBrainsMono Nerd Font 14";
+    element-font:                "JetBrainsMono Nerd Font Bold 28";
+}
 
 /*****----- Main Window -----*****/
 window {
+    transparency:                "real";
     location:                    center;
     anchor:                      center;
     fullscreen:                  false;
-    width:                       500px;
+    width:                       450px;
     border-radius:               20px;
+    border:                      2px;
+    border-color:                @color4;
     cursor:                      "default";
-    background-color:            @background;
+    background-color:            @background-window;
 }
 
 /*****----- Main Box -----*****/
 mainbox {
-    spacing:                     30px;
-    padding:                     30px;
+    spacing:                     24px;
+    padding:                     32px;
     background-color:            transparent;
     children:                    [ "message", "listview" ];
 }
@@ -38,19 +48,22 @@ mainbox {
 /*****----- Message -----*****/
 message {
     margin:                      0px;
-    padding:                     20px;
-    border-radius:               20px;
-    background-color:            @background;
+    padding:                     0px;
+    border-radius:               0px;
+    background-color:            transparent;
     text-color:                  @foreground;
 }
+
 textbox {
-    background-color:            inherit;
-    text-color:                  inherit;
+    padding:                     16px 20px;
+    border-radius:               12px;
+    background-color:            @background-element;
+    text-color:                  @color7;
     vertical-align:              0.5;
     horizontal-align:            0.5;
-    placeholder-color:           @foreground;
-    blink:                       true;
-    markup:                      true;
+    font:                        var(message-font);
+    border:                      1px;
+    border-color:                rgba(255, 255, 255, 0.1);
 }
 
 /*****----- Listview -----*****/
@@ -64,8 +77,8 @@ listview {
     reverse:                     false;
     fixed-height:                true;
     fixed-columns:               true;
-    
-    spacing:                     30px;
+
+    spacing:                     16px;
     background-color:            transparent;
     text-color:                  @foreground;
     cursor:                      "default";
@@ -73,21 +86,41 @@ listview {
 
 /*****----- Elements -----*****/
 element {
-    padding:                     60px 10px;
-    border-radius:               20px;
-    background-color:            @background;
+    padding:                     20px 24px;
+    border-radius:               12px;
+    background-color:            @background-element;
     text-color:                  @foreground;
     cursor:                      pointer;
+    border:                      2px;
+    border-color:                rgba(255, 255, 255, 0.05);
 }
+
 element-text {
-    font:                        "feather 48";
+    font:                        var(element-font);
     background-color:            transparent;
     text-color:                  inherit;
     cursor:                      inherit;
     vertical-align:              0.5;
     horizontal-align:            0.5;
 }
+
+/* Yes button (confirm) */
 element selected.normal {
-    background-color:            @color1;
-    text-color:                  @foreground;
+    background-color:            @background-selected;
+    text-color:                  @color0;
+    border-color:                @color5;
+}
+
+element.normal.normal {
+    text-color:                  @color7;
+}
+
+element.selected.normal {
+    text-color:                  @color0;
+}
+
+/* Alternative styling for different button states */
+element alternate.normal {
+    background-color:            @background-element;
+    text-color:                  @color7;
 }

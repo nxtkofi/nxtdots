@@ -14,7 +14,7 @@ dir="$HOME/.config/rofi/powermenu"
 theme='style'
 
 # CMDs
-uptime="`uptime -p | sed -e 's/up //g'`"
+current_time=$(date +"%H:%M")
 host=`hostname`
 
 # Options
@@ -23,14 +23,14 @@ reboot=''
 lock=''
 suspend='󰒲'
 logout='󰍃'
-yes='✅'
-no='❌'
+yes='󰄬'
+no='󰅖'
 
 # Rofi CMD
 rofi_cmd() {
 	rofi -dmenu \
-		-p "Goodbye ${USER}" \
-		-mesg "Uptime: $uptime" \
+		-p "Session Manager" \
+		-mesg "${current_time} • Uptime: $(uptime -p | sed -e 's/up //g')" \
 		-theme ${dir}/${theme}.rasi
 }
 
@@ -61,11 +61,15 @@ run_cmd() {
 		elif [[ $1 == '--reboot' ]]; then
 			systemctl reboot
 		elif [[ $1 == '--suspend' ]]; then
-			mpc -q pause
-			amixer set Master mute
+			# Pause media playback
+			playerctl pause 2>/dev/null
+			# Mute audio
+			wpctl set-mute @DEFAULT_AUDIO_SINK@ 1 2>/dev/null
 			systemctl suspend
 		elif [[ $1 == '--logout' ]]; then
-			if [[ "$DESKTOP_SESSION" == 'openbox' ]]; then
+			if [[ "$XDG_CURRENT_DESKTOP" == "Hyprland" ]]; then
+				hyprctl dispatch exit
+			elif [[ "$DESKTOP_SESSION" == 'openbox' ]]; then
 				openbox --exit
 			elif [[ "$DESKTOP_SESSION" == 'bspwm' ]]; then
 				bspc quit
