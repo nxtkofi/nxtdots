@@ -24,7 +24,7 @@ func Install() {
 	setupWallpapers(homedir)
 	setupBashrc(homedir)
 
-	packages := []string{"kitty", "fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "imagemagick", "bluetui", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek", "waypaper", "rofi", "hyprlock", "hyprpaper", "nautilus", "fastfetch", "starship", "zoxide", "noto-fonts-emoji", "ttf-jetbrains-mono-nerd", "ttf-firacode-nerd", "nerd-fonts-fira-code", "swaync", "xdg-desktop-portal", "xdg-desktop-portal-gtk", "xdg-desktop-portal-hyprland", "sddm", "qt6-svg", "qt6-virtualkeyboard", "qt6-multimedia-ffmpeg", "nvm", "hypridle", "rofimoji", "ripgrep", "missioncenter", "nvim", "wl-clipboard", "cliphist", "brightnessctl", "jq", "bash-completion", "ttf-0xproto-nerd", "hyprshot", "hyprsunset", "eza"}
+	packages := []string{"kitty", "fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "imagemagick", "bluetui", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek", "waypaper", "rofi", "hyprlock", "hyprpaper", "nautilus", "fastfetch", "starship", "zoxide", "noto-fonts-emoji", "ttf-jetbrains-mono-nerd", "ttf-firacode-nerd", "nerd-fonts-fira-code", "swaync", "xdg-desktop-portal", "xdg-desktop-portal-gtk", "xdg-desktop-portal-hyprland", "sddm", "qt6-svg", "qt6-virtualkeyboard", "qt6-multimedia-ffmpeg", "nvm", "hypridle", "rofimoji", "ripgrep", "missioncenter", "nvim", "wl-clipboard", "cliphist", "brightnessctl", "jq", "bash-completion", "ttf-0xproto-nerd", "hyprshot", "hyprsunset", "hypridle", "eza"}
 
 	if _, err := exec.LookPath("yay"); err == nil {
 		LogInfo("Using yay for package installation")
@@ -56,9 +56,6 @@ func Install() {
 	updateWaybarThemePaths(homedir)
 	updateWaybarMainTheme(homedir)
 
-	copyFromUsrShareToLocalAndPerformOverwrite("org.moson.pacseek.desktop", "Exec", "Exec=kitty --class Pacseek pacseek")
-	copyFromUsrShareToLocalAndPerformOverwrite("org.moson.pacseek.desktop", "Terminal", "Terminal=false")
-
 	LogInfo("Enabling power-profiles-daemon")
 	powerProfileDaemonEnable := exec.Command("sudo", "systemctl", "enable", "--now", "power-profiles-daemon")
 	LogCommand("sudo systemctl enable --now power-profiles-daemon")
@@ -69,6 +66,9 @@ func Install() {
 	installSddmTheme()
 	LogInfo("Running one-time setup commands")
 	setupOneTimeCommands()
+
+	LogInfo("Setting up desktop entries")
+	setupDesktopEntries(homedir)
 
 	LogInfo("Installation complete. You can now run 'waybar' to start waybar")
 	fmt.Println("Installation complete. You can now run 'waybar' to start waybar.")
@@ -361,6 +361,95 @@ func setupOneTimeCommands() {
 	ReturnOnErr(err)
 
 	fmt.Println("One-time setup commands completed")
+}
+
+func setupDesktopEntries(homedir string) {
+	fmt.Println("Setting up desktop entries...")
+
+	// Create necessary directories
+	iconsDir := homedir + "/.local/share/icons"
+	err := os.MkdirAll(iconsDir, 0755)
+	ReturnOnErr(err)
+
+	claudeChatsDir := homedir + "/.cache/claude-chats"
+	err = os.MkdirAll(claudeChatsDir, 0755)
+	ReturnOnErr(err)
+
+	applicationsDir := homedir + "/.local/share/applications"
+	err = os.MkdirAll(applicationsDir, 0755)
+	ReturnOnErr(err)
+
+	// Copy Claude.png to icons directory
+	configDir := homedir + "/.config"
+	claudeIconSrc := configDir + "/assets/icons/Claude.png"
+	claudeIconDst := iconsDir + "/Claude.png"
+
+	if _, err := os.Stat(claudeIconSrc); err == nil {
+		srcFile, err := os.Open(claudeIconSrc)
+		if err == nil {
+			defer srcFile.Close()
+			dstFile, err := os.Create(claudeIconDst)
+			if err == nil {
+				defer dstFile.Close()
+				_, err = io.Copy(dstFile, srcFile)
+				ReturnOnErr(err)
+				fmt.Printf("Copied Claude icon to %s\n", claudeIconDst)
+			}
+		}
+	} else {
+		fmt.Printf("Warning: Claude.png not found at %s, skipping icon installation\n", claudeIconSrc)
+	}
+
+	// Create Claude Code desktop entry
+	claudeDesktopEntry := `[Desktop Entry]
+Name=Claude Code
+Comment=AI-powered coding assistant by Anthropic
+Exec=claude-code
+Icon=` + iconsDir + `/Claude.png
+Type=Application
+Categories=Development;Utility;
+Terminal=false
+StartupNotify=true`
+
+	claudeDesktopPath := applicationsDir + "/claude-code.desktop"
+	err = os.WriteFile(claudeDesktopPath, []byte(claudeDesktopEntry), 0644)
+	ReturnOnErr(err)
+	fmt.Printf("Created Claude Code desktop entry at %s\n", claudeDesktopPath)
+
+	// Create Neovim desktop entry
+	nvimDesktopEntry := `[Desktop Entry]
+Name=Neovim
+Comment=Hyperextensible Vim-based text editor
+Exec=kitty nvim %F
+Icon=nvim
+Type=Application
+Categories=Development;TextEditor;
+Terminal=false
+StartupNotify=true
+MimeType=text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;`
+
+	nvimDesktopPath := applicationsDir + "/nvim.desktop"
+	err = os.WriteFile(nvimDesktopPath, []byte(nvimDesktopEntry), 0644)
+	ReturnOnErr(err)
+	fmt.Printf("Created Neovim desktop entry at %s\n", nvimDesktopPath)
+
+	// Create Pacseek desktop entry
+	pacseekDesktopEntry := `[Desktop Entry]
+Name=Pacseek
+Comment=Terminal UI for searching and installing Arch Linux packages
+Exec=kitty --class Pacseek pacseek
+Icon=system-software-install
+Type=Application
+Categories=System;PackageManager;
+Terminal=false
+StartupNotify=true`
+
+	pacseekDesktopPath := applicationsDir + "/org.moson.pacseek.desktop"
+	err = os.WriteFile(pacseekDesktopPath, []byte(pacseekDesktopEntry), 0644)
+	ReturnOnErr(err)
+	fmt.Printf("Created Pacseek desktop entry at %s\n", pacseekDesktopPath)
+
+	fmt.Println("Desktop entries setup complete")
 }
 
 func updateWaybarThemePaths(homedir string) {
