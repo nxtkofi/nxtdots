@@ -26,7 +26,6 @@ func ExecPywal(colorMode XDGColorScheme, wallpaperFilePath string) error {
 
 func resetKittyIfItsRunning() {
 	cmd := exec.Command("pkill", "-SIGUSR1", "kitty")
-	err := cmd.Run()
-
-	ReturnOnErr(err)
+	// Ignore error - pkill returns exit status 1 if no process is found, which is expected
+	cmd.Run()
 }

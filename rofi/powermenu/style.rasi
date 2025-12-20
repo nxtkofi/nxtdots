@@ -47,7 +47,7 @@ window {
     border-color:                @color4;
     cursor:                      "default";
     background-color:            @background-window;
-    background-image:            url("~/.cache/wallpaper/blurred_wallpaper.png", height);
+    background-image:            url("~/.cache/wallpaper/blurred_wallpaper.png", width);
 }
 
 /*****----- Main Box -----*****/
@@ -74,7 +74,7 @@ prompt {
     enabled:                     true;
     font:                        var(prompt-font);
     background-color:            transparent;
-    text-color:                  @color5;
+    text-color:                  @foreground;
 }
 
 /*****----- Message -----*****/
@@ -92,7 +92,7 @@ message {
 textbox {
     font:                        var(textbox-font);
     background-color:            transparent;
-    text-color:                  @color7;
+    text-color:                  @foreground;
     vertical-align:              0.5;
     horizontal-align:            0.5;
 }

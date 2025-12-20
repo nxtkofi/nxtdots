@@ -21,6 +21,15 @@ func UpdateWallpaper(newWallpaperFullFilePath, homeDir string) {
 
 	colorScheme := GetCurrentSystemTheme()
 
+	swwwCmd := exec.Command("swww", "img", newWallpaperFullFilePath,
+		"--transition-type", "grow",
+		"--transition-pos", "0.5,0.5",
+		"--transition-duration", "1.5",
+		"--transition-fps", "165",
+		"--transition-bezier", "0.25,0.1,0.25,1.0")
+	err = swwwCmd.Run()
+	ReturnOnErr(err)
+
 	err = ExecPywal(colorScheme, newWallpaperFullFilePath)
 	colors, err := GetPywalColors()
 	ReturnOnErr(err)
@@ -31,7 +40,7 @@ func UpdateWallpaper(newWallpaperFullFilePath, homeDir string) {
 	err = UpdateSpicetify(colors, homeDir)
 	ReturnOnErr(err)
 
-	walcordUpdate := exec.Command("walcord", "-i", newWallpaperFullFilePath, "-t", homeDir+"/.config/vesktop/themes/midnight-vesktop.template.css", "-o", homeDir+"/.config/vesktop/themes/midnight-vesktop.theme.css")
+	walcordUpdate := exec.Command("walcord", "-j", homeDir+"/.cache/wal/colors.json", "-t", homeDir+"/.config/vesktop/themes/midnight-vesktop.template.css", "-o", homeDir+"/.config/vesktop/themes/midnight-vesktop.theme.css")
 	err = walcordUpdate.Run()
 
 	ReturnOnErr(err)

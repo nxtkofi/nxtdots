@@ -1,4 +1,4 @@
-/* nxtdots-pywal-light */
+/* nxtdots-pywal-dark */
 @import url("../../.cache/wal/colors-waybar.css");
 
 @define-color red #f38ba8;
@@ -16,14 +16,14 @@
 
 
 @define-color workspaces @background;
-@define-color temperature shade(@background, 0.7);
-@define-color tray shade(@background, 0.7);
-@define-color wireplumber shade(@background, 0.7);
+@define-color temperature shade(@background, 2.0);
+@define-color tray shade(@background, 2.0);
+@define-color wireplumber shade(@background, 2.0);
 
 
-@define-color memory shade(@background, 0.85);
-@define-color date shade(@background, 0.85);
-@define-color backlight shade(@background, 0.85);
+@define-color memory shade(@background, 1.5);
+@define-color date shade(@background, 1.5);
+@define-color backlight shade(@background, 1.5);
 @define-color cpu @background;
 @define-color time @background;
 @define-color battery @background;

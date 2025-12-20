@@ -13,11 +13,17 @@ func UpdateSpicetify(pywalColors map[string]string, homeDir string) error {
 	if err != nil {
 		return err
 	}
+	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
 
 	var configAsArray []string
 	for scanner.Scan() {
 		configAsArray = append(configAsArray, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		return err
 	}
 
 	for i, line := range configAsArray {
@@ -38,15 +44,12 @@ func UpdateSpicetify(pywalColors map[string]string, homeDir string) error {
 			newColorKey = "foreground"
 
 		case "playback-bar", "play-button", "button", "button-active":
-
 			newColorKey = "color4"
 
-		case "text", "button-secondary", "notfication", "misc":
-
+		case "text", "button-secondary", "notification", "misc":
 			newColorKey = "color6"
 
 		case "nav-active":
-
 			newColorKey = "color5"
 		default:
 			continue
@@ -54,16 +57,11 @@ func UpdateSpicetify(pywalColors map[string]string, homeDir string) error {
 
 		if newColor, ok := pywalColors[newColorKey]; ok {
 			cleanColor := strings.Trim(newColor, "'# ")
-
 			newLine := fmt.Sprintf("%s = %s", key, cleanColor)
 			configAsArray[i] = newLine
 		}
-
 	}
 
 	output := strings.Join(configAsArray, "\n")
-	err = os.WriteFile(pathToTheme, []byte(output), 0644)
-	ReturnOnErr(err)
-
-	return nil
+	return os.WriteFile(pathToTheme, []byte(output), 0644)
 }
