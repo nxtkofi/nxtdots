@@ -24,33 +24,61 @@ func Install() {
 	setupWallpapers(homedir)
 	setupBashrc(homedir)
 
-	packages := []string{"kitty", "fzf", "waybar", "downgrade", "vesktop", "walcord", "spicetify-cli", "python-pywal16", "imagemagick", "bluetui", "power-profiles-daemon", "zen-browser-bin", "hyprland", "spotify", "pacseek", "swww", "rofi", "wofi", "wofi-emoji", "hyprlock", "hyprpaper", "nautilus", "fastfetch", "starship", "zoxide", "noto-fonts-emoji", "ttf-jetbrains-mono-nerd", "ttf-firacode-nerd", "nerd-fonts-fira-code", "swaync", "xdg-desktop-portal", "xdg-desktop-portal-gtk", "xdg-desktop-portal-hyprland", "sddm", "qt6-svg", "qt6-virtualkeyboard", "qt6-multimedia-ffmpeg", "nvm", "hypridle", "ripgrep", "missioncenter", "nvim", "wl-clipboard", "cliphist", "brightnessctl", "jq", "bash-completion", "ttf-0xproto-nerd", "hyprshot", "hyprsunset", "hypridle", "eza", "mpv", "papirus-icon-theme", "wtype"}
-
-	if _, err := exec.LookPath("yay"); err == nil {
-		LogInfo("Using yay for package installation")
-		cmd := exec.Command("yay", append([]string{"-S", "--noconfirm"}, packages...)...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
-		LogCommand(fmt.Sprintf("yay -S --noconfirm %s", strings.Join(packages, " ")))
-		err = cmd.Run()
-	} else {
+	if _, err := exec.LookPath("yay"); err != nil {
 		LogInfo("yay not found, attempting to install yay")
-		if installYay() {
-			LogInfo("yay installed successfully, installing all packages")
-			cmd := exec.Command("yay", append([]string{"-S", "--noconfirm"}, packages...)...)
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-			cmd.Stdin = os.Stdin
-			LogCommand(fmt.Sprintf("yay -S --noconfirm %s", strings.Join(packages, " ")))
-			err = cmd.Run()
-		} else {
+		if !installYay() {
 			LogError("Failed to install yay. Cannot proceed with package installation", nil)
 			LogInfo("Please install yay manually and run this script again")
 			return
 		}
+		LogInfo("yay installed successfully")
 	}
-	ReturnOnErr(err)
+
+	corePackages := []string{
+		"hyprland", "waybar", "kitty", "rofi", "wofi", "wofi-emoji",
+		"swaync", "hyprlock", "hypridle", "hyprpaper", "hyprshot", "hyprsunset",
+		"xdg-desktop-portal", "xdg-desktop-portal-gtk", "xdg-desktop-portal-hyprland",
+		"sddm", "qt6-svg", "qt6-virtualkeyboard", "qt6-multimedia-ffmpeg",
+	}
+
+	aurPackages := []string{
+		"vesktop", "walcord", "spicetify-cli", "zen-browser-bin",
+		"spotify", "pacseek", "swww",
+	}
+
+	utilityPackages := []string{
+		"fzf", "ripgrep", "nvim", "wl-clipboard", "cliphist", "jq",
+		"brightnessctl", "imagemagick", "bluetui", "power-profiles-daemon",
+		"downgrade", "python-pywal16", "missioncenter", "nautilus",
+		"fastfetch", "starship", "zoxide", "bash-completion", "nvm",
+		"eza", "mpv", "papirus-icon-theme", "wtype",
+	}
+
+	fontPackages := []string{
+		"noto-fonts-emoji", "ttf-jetbrains-mono-nerd", "ttf-firacode-nerd",
+		"nerd-fonts-fira-code", "ttf-0xproto-nerd",
+	}
+
+	LogInfo("Installing core Hyprland packages")
+	installPackageGroup(corePackages)
+
+	LogInfo("Installing AUR packages")
+	installPackageGroup(aurPackages)
+
+	LogInfo("Installing utility packages")
+	installPackageGroup(utilityPackages)
+
+	LogInfo("Installing fonts")
+	installPackageGroup(fontPackages)
+
+	LogInfo("Validating critical packages installation")
+	criticalPackages := []string{"hyprland", "waybar", "kitty", "nvim"}
+	for _, pkg := range criticalPackages {
+		if !isPackageInstalled(pkg) {
+			LogError(fmt.Sprintf("Critical package '%s' is not installed!", pkg), nil)
+			fmt.Printf("Installation may have failed. Please check logs and install missing packages manually.\n")
+		}
+	}
 
 	LogInfo("Updating Waybar theme paths")
 	updateWaybarThemePaths(homedir)
@@ -69,6 +97,12 @@ func Install() {
 
 	LogInfo("Setting up desktop entries")
 	setupDesktopEntries(homedir)
+
+	LogInfo("Checking for NVIDIA GPU")
+	setupNvidiaIfDetected(homedir)
+
+	LogInfo("Running initial pywal setup")
+	runInitialPywalSetup(homedir)
 
 	LogInfo("Installation complete. You can now run 'waybar' to start waybar")
 	fmt.Println("Installation complete. You can now run 'waybar' to start waybar.")
@@ -146,7 +180,7 @@ func copyFromUsrShareToLocalAndPerformOverwrite(ogFileName, keyString, replaceVa
 	ReturnOnErr(err)
 
 	localAppsDir := homedir + "/.local/share/applications/"
-	err = os.MkdirAll(localAppsDir, 0755)
+	err = os.MkdirAll(localAppsDir, 0o755)
 	ReturnOnErr(err)
 
 	dstPath := localAppsDir + ogFileName
@@ -188,7 +222,7 @@ func copyFromUsrShareToLocalAndPerformOverwrite(ogFileName, keyString, replaceVa
 		}
 	}
 
-	err = os.WriteFile(dstPath, []byte(strings.Join(lines, "\n")), 0644)
+	err = os.WriteFile(dstPath, []byte(strings.Join(lines, "\n")), 0o644)
 	ReturnOnErr(err)
 }
 
@@ -256,7 +290,7 @@ func installSddmTheme() {
 
 	sddmConfig := `[Theme]
 Current=sddm-astronaut-theme`
-	err = os.WriteFile("/tmp/sddm.conf", []byte(sddmConfig), 0644)
+	err = os.WriteFile("/tmp/sddm.conf", []byte(sddmConfig), 0o644)
 	ReturnOnErr(err)
 
 	copySddmConfig := exec.Command("sudo", "cp", "/tmp/sddm.conf", "/etc/sddm.conf")
@@ -265,7 +299,7 @@ Current=sddm-astronaut-theme`
 
 	virtKbdConfig := `[General]
 InputMethod=qtvirtualkeyboard`
-	err = os.WriteFile("/tmp/virtualkbd.conf", []byte(virtKbdConfig), 0644)
+	err = os.WriteFile("/tmp/virtualkbd.conf", []byte(virtKbdConfig), 0o644)
 	ReturnOnErr(err)
 
 	mkdirSddm := exec.Command("sudo", "mkdir", "-p", "/etc/sddm.conf.d")
@@ -300,7 +334,7 @@ func setupWallpapers(homedir string) {
 		return
 	}
 
-	err = os.MkdirAll(homeWallpaperPath, 0755)
+	err = os.MkdirAll(homeWallpaperPath, 0o755)
 	ReturnOnErr(err)
 
 	copyWallpapers := exec.Command("cp", "-r", assetsWallpaperPath+"/.", homeWallpaperPath+"/")
@@ -324,7 +358,7 @@ func setupBashrc(homedir string) {
 	bashrcPath := homedir + "/.bashrc"
 
 	if _, err := os.Stat(bashrcPath); os.IsNotExist(err) {
-		err := os.WriteFile(bashrcPath, []byte(bashrcLoop), 0644)
+		err := os.WriteFile(bashrcPath, []byte(bashrcLoop), 0o644)
 		ReturnOnErr(err)
 		fmt.Printf(".bashrc created at %s\n", bashrcPath)
 	} else {
@@ -339,7 +373,7 @@ func setupBashrc(homedir string) {
 		}
 
 		updatedContent := contentStr + bashrcLoop
-		err = os.WriteFile(bashrcPath, []byte(updatedContent), 0644)
+		err = os.WriteFile(bashrcPath, []byte(updatedContent), 0o644)
 		ReturnOnErr(err)
 		fmt.Printf("Added nxtdots configuration to existing .bashrc at %s\n", bashrcPath)
 	}
@@ -368,15 +402,15 @@ func setupDesktopEntries(homedir string) {
 
 	// Create necessary directories
 	iconsDir := homedir + "/.local/share/icons"
-	err := os.MkdirAll(iconsDir, 0755)
+	err := os.MkdirAll(iconsDir, 0o755)
 	ReturnOnErr(err)
 
 	claudeChatsDir := homedir + "/.cache/claude-chats"
-	err = os.MkdirAll(claudeChatsDir, 0755)
+	err = os.MkdirAll(claudeChatsDir, 0o755)
 	ReturnOnErr(err)
 
 	applicationsDir := homedir + "/.local/share/applications"
-	err = os.MkdirAll(applicationsDir, 0755)
+	err = os.MkdirAll(applicationsDir, 0o755)
 	ReturnOnErr(err)
 
 	// Copy Claude.png to icons directory
@@ -412,7 +446,7 @@ Terminal=false
 StartupNotify=true`
 
 	claudeDesktopPath := applicationsDir + "/claude-code.desktop"
-	err = os.WriteFile(claudeDesktopPath, []byte(claudeDesktopEntry), 0644)
+	err = os.WriteFile(claudeDesktopPath, []byte(claudeDesktopEntry), 0o644)
 	ReturnOnErr(err)
 	fmt.Printf("Created Claude Code desktop entry at %s\n", claudeDesktopPath)
 
@@ -429,7 +463,7 @@ StartupNotify=true
 MimeType=text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;`
 
 	nvimDesktopPath := applicationsDir + "/nvim.desktop"
-	err = os.WriteFile(nvimDesktopPath, []byte(nvimDesktopEntry), 0644)
+	err = os.WriteFile(nvimDesktopPath, []byte(nvimDesktopEntry), 0o644)
 	ReturnOnErr(err)
 	fmt.Printf("Created Neovim desktop entry at %s\n", nvimDesktopPath)
 
@@ -444,7 +478,7 @@ Terminal=false
 StartupNotify=true`
 
 	pacseekDesktopPath := applicationsDir + "/org.moson.pacseek.desktop"
-	err = os.WriteFile(pacseekDesktopPath, []byte(pacseekDesktopEntry), 0644)
+	err = os.WriteFile(pacseekDesktopPath, []byte(pacseekDesktopEntry), 0o644)
 	ReturnOnErr(err)
 	fmt.Printf("Created Pacseek desktop entry at %s\n", pacseekDesktopPath)
 
@@ -474,7 +508,7 @@ func updateCSSFilePath(filePath, homedir string) {
 	newPath := "file://" + homedir + "/.cache/wal/colors-waybar.css"
 	updatedContent := strings.ReplaceAll(string(content), oldPath, newPath)
 
-	err = os.WriteFile(filePath, []byte(updatedContent), 0644)
+	err = os.WriteFile(filePath, []byte(updatedContent), 0o644)
 	ReturnOnErr(err)
 
 	fmt.Printf("Updated path in %s\n", filePath)
@@ -487,4 +521,230 @@ func updateWaybarMainTheme(homedir string) {
 	updateCSSFilePath(mainThemePath, homedir)
 
 	fmt.Println("Main waybar theme path updated")
+}
+
+func installPackageGroup(packages []string) {
+	if len(packages) == 0 {
+		return
+	}
+
+	LogInfo(fmt.Sprintf("Installing %d packages: %s", len(packages), strings.Join(packages, ", ")))
+
+	cmd := exec.Command("yay", append([]string{"-S", "--needed", "--noconfirm"}, packages...)...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+
+	err := cmd.Run()
+	if err != nil {
+		LogError(fmt.Sprintf("Package installation failed for group (some packages may have been installed): %v", packages), err)
+	} else {
+		LogInfo(fmt.Sprintf("Successfully completed installation attempt for %d packages", len(packages)))
+	}
+}
+
+func isPackageInstalled(packageName string) bool {
+	cmd := exec.Command("pacman", "-Qi", packageName)
+	err := cmd.Run()
+	return err == nil
+}
+
+func setupNvidiaIfDetected(homedir string) {
+	fmt.Println("Checking for NVIDIA GPU...")
+
+	cmd := exec.Command("lspci")
+	output, err := cmd.Output()
+	if err != nil {
+		fmt.Printf("Warning: Could not detect GPU: %v\n", err)
+		return
+	}
+
+	outputStr := strings.ToLower(string(output))
+	if !strings.Contains(outputStr, "nvidia") {
+		fmt.Println("No NVIDIA GPU detected, skipping NVIDIA setup")
+		return
+	}
+
+	fmt.Println("NVIDIA GPU detected! Installing NVIDIA drivers...")
+	LogInfo("NVIDIA GPU detected, installing drivers")
+
+	nvidiaPackages := []string{
+		"nvidia",
+		"nvidia-utils",
+		"egl-wayland",
+		"libva-nvidia-driver",
+	}
+
+	installPackageGroup(nvidiaPackages)
+
+	fmt.Println("Configuring GRUB for NVIDIA...")
+	LogInfo("Configuring GRUB for NVIDIA")
+
+	grubPath := "/etc/default/grub"
+	grubContent, err := os.ReadFile(grubPath)
+	if err != nil {
+		LogError("Failed to read GRUB config", err)
+		fmt.Printf("Warning: Could not read %s, please manually add nvidia_drm.modeset=1 to GRUB_CMDLINE_LINUX_DEFAULT\n", grubPath)
+	} else {
+		grubStr := string(grubContent)
+		if !strings.Contains(grubStr, "nvidia_drm.modeset=1") {
+			lines := strings.Split(grubStr, "\n")
+			for i, line := range lines {
+				if strings.HasPrefix(strings.TrimSpace(line), "GRUB_CMDLINE_LINUX_DEFAULT=") {
+					line = strings.TrimRight(line, "\"")
+					if !strings.HasSuffix(line, "=") && !strings.HasSuffix(line, "=\"") {
+						line += " "
+					}
+					lines[i] = line + "nvidia_drm.modeset=1 nvidia_drm.fbdev=1\""
+					break
+				}
+			}
+			updatedGrub := strings.Join(lines, "\n")
+			tmpGrubPath := "/tmp/grub-nvidia"
+			err = os.WriteFile(tmpGrubPath, []byte(updatedGrub), 0o644)
+			if err == nil {
+				copyCmd := exec.Command("sudo", "cp", tmpGrubPath, grubPath)
+				err = copyCmd.Run()
+				if err != nil {
+					LogError("Failed to update GRUB config", err)
+				} else {
+					fmt.Println("GRUB config updated with NVIDIA parameters")
+					LogInfo("GRUB config updated successfully")
+
+					grubMkconfig := exec.Command("sudo", "grub-mkconfig", "-o", "/boot/grub/grub.cfg")
+					grubMkconfig.Stdout = os.Stdout
+					grubMkconfig.Stderr = os.Stderr
+					err = grubMkconfig.Run()
+					if err != nil {
+						LogError("Failed to regenerate GRUB config", err)
+					} else {
+						fmt.Println("GRUB configuration regenerated")
+					}
+				}
+				os.Remove(tmpGrubPath)
+			}
+		} else {
+			fmt.Println("GRUB already configured for NVIDIA")
+		}
+	}
+
+	fmt.Println("Configuring Hyprland environment for NVIDIA...")
+	LogInfo("Configuring Hyprland environment for NVIDIA")
+
+	envConfPath := homedir + "/.config/hypr/conf/environment.conf"
+	envContent, err := os.ReadFile(envConfPath)
+	if err != nil {
+		LogError("Failed to read environment.conf", err)
+		fmt.Printf("Warning: Could not read %s\n", envConfPath)
+		return
+	}
+
+	envStr := string(envContent)
+	lines := strings.Split(envStr, "\n")
+	modified := false
+
+	for i, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "# env = GBM_BACKEND,nvidia-drm") ||
+			strings.HasPrefix(trimmed, "# env = LIBVA_DRIVER_NAME,nvidia") ||
+			strings.HasPrefix(trimmed, "# env = __GLX_VENDOR_LIBRARY_NAME,nvidia") ||
+			strings.HasPrefix(trimmed, "# env = __NV_PRIME_RENDER_OFFLOAD,1") ||
+			strings.HasPrefix(trimmed, "# env = __VK_LAYER_NV_optimus,NVIDIA_only") {
+			lines[i] = strings.Replace(line, "# env =", "env =", 1)
+			modified = true
+		}
+		if strings.HasPrefix(trimmed, "# cursor {") {
+			lines[i] = "cursor {"
+			modified = true
+		}
+		if strings.HasPrefix(trimmed, "#     no_hardware_cursors = true") {
+			lines[i] = "    no_hardware_cursors = true"
+			modified = true
+		}
+		if strings.HasPrefix(trimmed, "# }") && modified {
+			lines[i] = "}"
+		}
+	}
+
+	if modified {
+		updatedEnv := strings.Join(lines, "\n")
+		err = os.WriteFile(envConfPath, []byte(updatedEnv), 0o644)
+		if err != nil {
+			LogError("Failed to update environment.conf", err)
+		} else {
+			fmt.Println("Hyprland environment configured for NVIDIA")
+			LogInfo("environment.conf updated successfully")
+		}
+	} else {
+		fmt.Println("Hyprland environment already configured for NVIDIA")
+	}
+
+	fmt.Println("NVIDIA setup complete! Please reboot your system for changes to take effect.")
+	LogInfo("NVIDIA setup completed")
+}
+
+func runInitialPywalSetup(homedir string) {
+	fmt.Println("Running initial pywal setup...")
+
+	wallpaperDir := homedir + "/wallpaper"
+	entries, err := os.ReadDir(wallpaperDir)
+	if err != nil {
+		LogError("Failed to read wallpaper directory", err)
+		fmt.Printf("Warning: Could not read wallpaper directory %s\n", wallpaperDir)
+		return
+	}
+
+	var firstWallpaper string
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			name := strings.ToLower(entry.Name())
+			if strings.HasSuffix(name, ".jpg") || strings.HasSuffix(name, ".jpeg") ||
+				strings.HasSuffix(name, ".png") || strings.HasSuffix(name, ".webp") {
+				firstWallpaper = wallpaperDir + "/" + entry.Name()
+				break
+			}
+		}
+	}
+
+	if firstWallpaper == "" {
+		fmt.Println("No wallpaper found in ~/wallpaper, skipping initial pywal setup")
+		LogInfo("No wallpaper found, skipping pywal setup")
+		return
+	}
+
+	fmt.Printf("Generating initial theme from wallpaper: %s\n", firstWallpaper)
+	LogInfo(fmt.Sprintf("Running initial pywal with wallpaper: %s", firstWallpaper))
+
+	colorScheme := GetCurrentSystemTheme()
+	err = ExecPywal(colorScheme, firstWallpaper)
+	if err != nil {
+		LogError("Failed to run pywal", err)
+		fmt.Printf("Warning: pywal failed: %v\n", err)
+		return
+	}
+
+	colors, err := GetPywalColors()
+	if err != nil {
+		LogError("Failed to get pywal colors", err)
+		fmt.Printf("Warning: Could not get pywal colors: %v\n", err)
+		return
+	}
+
+	cavaConfigPath := homedir + "/.config/cava/config"
+	err = UpdateCavaGradient(cavaConfigPath, colors)
+	if err != nil {
+		LogError("Failed to update cava gradient", err)
+		fmt.Printf("Warning: Could not update cava gradient: %v\n", err)
+	} else {
+		fmt.Println("Cava gradient configured")
+	}
+
+	cachePath := homedir + "/.cache/wallpaper/"
+	err = os.MkdirAll(cachePath+"wallpaper-generated/", 0o755)
+	if err == nil {
+		os.WriteFile(cachePath+"current_wallpaper", []byte(firstWallpaper), 0o644)
+	}
+
+	fmt.Println("Initial pywal setup complete")
+	LogInfo("Initial pywal setup completed successfully")
 }
