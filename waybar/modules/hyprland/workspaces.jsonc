@@ -2,8 +2,8 @@
 	"hyprland/workspaces": {
 		// "active-only":
 		// "hide-active":
-		// "all-outputs":
-		"format": "{icon}",
+		"all-outputs": true,
+		"format": "{id}",
 		"format-icons": {
 			"active": "",
 			"default": ""
