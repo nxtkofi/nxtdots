@@ -1,22 +1,21 @@
 {
- 	"logo": {
-		"type":"kitty",
-		"height":16,
-		"padding" : {
-			"top":0
-		}
-	},
+    "logo": {
+        "type": "kitty",
+        "height": 16,
+        "padding": {
+            "top": 0
+        }
+    },
     "display": {
         "separator": "- "
     },
     "modules": [
-
-	{
+        {
             "type": "custom",
             "format": "\u001b[36m  \u001b[36m  \u001b[36m  \u001b[33m  \u001b[34m  \u001b[35m  \u001b[36m  "
         },
-	"break",
-	{
+        "break",
+        {
             "type": "title",
             "keyWidth": 10
         },
@@ -73,7 +72,6 @@
             "key": " ",
             "keyColor": "34"
         },
-
         "break",
         {
             "type": "custom",

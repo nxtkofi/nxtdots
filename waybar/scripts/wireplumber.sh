@@ -6,6 +6,9 @@
 # Created: August 24, 2025
 # License: MIT
 
+LOCKFILE="/tmp/wireplumber_notify.lock"
+DEBOUNCE_TIME=0.5
+
 get_volume() {
 	output=$(wpctl get-volume "$default")
 	volume=$(awk '{print ($2 * 100)}' <<<"$output")
@@ -39,9 +42,22 @@ notify_send() {
 
 	if [[ $2 == 'lower' ]] || [[ $2 == 'raise' ]]; then
 		body="${volume}%"
-	fi
 
-	notify-send "${title}: $body" -h int:value:"$volume" -i "$icon" -r 2425
+		if [[ -f "$LOCKFILE" ]]; then
+			kill "$(cat "$LOCKFILE")" 2>/dev/null
+		fi
+
+		(
+			echo $$ > "$LOCKFILE"
+			sleep "$DEBOUNCE_TIME"
+			if [[ -f "$LOCKFILE" ]] && [[ "$(cat "$LOCKFILE")" == "$$" ]]; then
+				notify-send "${title}: $body" -h int:value:"$volume" -i "$icon" -r 2425
+				rm -f "$LOCKFILE"
+			fi
+		) &
+	else
+		notify-send "${title}: $body" -h int:value:"$volume" -i "$icon" -r 2425
+	fi
 }
 
 case $1 in
@@ -57,7 +73,7 @@ case $1 in
 		;;
 esac
 
-value=1
+value=5
 case $2 in
 	'lower') wpctl set-volume --limit 1.0 "$default" "$value"%- ;;
 	'raise') wpctl set-volume --limit 1.0 "$default" "$value"%+ ;;

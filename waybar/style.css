@@ -1,10 +1,10 @@
 @import "theme.css";
 
 * {
-	font-family: "0xProto Nerd Font";
-	font-weight: bold;
-	font-size: 16px;
-	color: @main-fg;
+  font-family: "0xProto Nerd Font";
+  font-weight: bold;
+  font-size: 16px;
+  color: @main-fg;
 }
 
 /*------------------------
@@ -14,23 +14,23 @@
 /* group-power_profiles / power-profiles */
 
 #power-profiles-daemon {
-	font-size: 18px;
-	color: @accent;
-	background-color: @main-bg;
+  font-size: 18px;
+  color: @accent;
+  background-color: @main-bg;
 }
 
 #tray {
-	background-color: @main-bg;
+  background-color: @main-bg;
 }
 
 #custom-right_div.9 {
-	color: @main-bg;
-	margin-right: 16px;
+  color: @main-bg;
+  margin-right: 16px;
 }
 
 #custom-left_div.10 {
-	color: @main-bg;
-	margin-left: 8px;
+  color: @main-bg;
+  margin-left: 8px;
 }
 
 /* #custom-user { */
@@ -42,199 +42,197 @@
 /* workspaces */
 #custom-left_div.1,
 #custom-right_div.1 {
-	color: @workspaces;
+  color: @workspaces;
 }
 
 #workspaces {
-	padding: 0 1px;
-	background-color: @workspaces;
+  padding: 0 1px;
+  background-color: @workspaces;
 }
 
 button {
-	border-radius: 16px;
-	padding: 0 10px;
+  border-radius: 16px;
+  padding: 0 10px;
 }
 
 button:hover {
-	background-color: @hover-bg;
-	color: @hover-fg;
+  background-color: @hover-bg;
+  color: @hover-fg;
 }
 
 button.active label {
-	font-size: 23px;
-	color: @accent;
+  background-color: @accent;
+  color: @main-bg;
+  padding: 2px 16px;
+  border-radius: 100px;
 }
 
 /* window and window count */
 
 #window {
-	margin-left: 12px;
+  margin-left: 12px;
 }
 
 #window label {
-	font-weight: normal;
+  font-weight: normal;
 }
 
 #windowcount {
-	margin-right: 12px;
+  margin-right: 12px;
 }
 
 #windowcount label {
-	color: @main-fg;
+  color: @main-fg;
 }
 
 /* temperature */
 
 #custom-left_div.2 {
-	color: @temperature;
+  color: @temperature;
 }
 
 #temperature,
 #custom-temperature {
-	background-color: @temperature;
+  background-color: @temperature;
 }
 
 /* memory */
 
 #custom-left_div.3 {
-	background-color: @temperature;
-	color: @memory;
+  background-color: @temperature;
+  color: @memory;
 }
 
 #memory {
-	background-color: @memory;
+  background-color: @memory;
 }
 
 /* cpu */
 
 #custom-left_div.4 {
-	background-color: @memory;
-	color: @cpu;
+  background-color: @memory;
+  color: @cpu;
 }
 
 #cpu {
-	background-color: @cpu;
+  background-color: @cpu;
 }
-
 
 /* distro */
 
 #custom-left_div.5,
 #custom-right_div.2 {
-	color: @accent;
+  color: @accent;
 }
 
 #custom-distro {
-	padding: 0 10px 0 5px;
-	font-size: 23px;
-	background-color: @accent;
-	color: @main-bg;
+  padding: 0 10px 0 5px;
+  font-size: 23px;
+  background-color: @accent;
+  color: @main-bg;
 }
 
 /* idle inhibitor and time */
 
-
-
 #idle_inhibitor {
-	background-color: @time;
+  background-color: @time;
 }
 
 #clock.time {
-	padding-right: 6px;
-	background-color: @time;
+  padding-right: 6px;
+  background-color: @time;
 }
 
 #custom-right_div.3 {
-	background-color: @date;
-	color: @time;
+  background-color: @date;
+  color: @time;
 }
 
 /* date */
 
 #clock.date {
-	padding-left: 6px;
-	background-color: @date;
+  padding-left: 6px;
+  background-color: @date;
 }
 
 #custom-right_div.4 {
-	background-color: @tray;
-	color: @date;
+  background-color: @tray;
+  color: @date;
 }
 
 /* tray */
 
 #network {
-	background-color: @tray;
-	padding: 0 6px 0 4px;
+  background-color: @tray;
+  padding: 0 6px 0 4px;
 }
 
 #bluetooth {
-	background-color: @tray;
-	padding: 0 5px;
+  background-color: @tray;
+  padding: 0 5px;
 }
 
 #custom-system_update {
-	background-color: @tray;
-	padding: 0 8px 0 2px;
+  background-color: @tray;
+  padding: 0 8px 0 2px;
 }
 
 #custom-right_div.5 {
-	color: @tray;
+  color: @tray;
 }
 
 /* mpris */
 
 #mpris {
-	padding: 0 12px;
-	font-weight: normal;
+  padding: 0 12px;
+  font-weight: normal;
 }
 
 /* group-wireplumber */
 
 #custom-left_div.6 {
-	color: @wireplumber;
+  color: @wireplumber;
 }
 
 #wireplumber {
-	background-color: @wireplumber;
+  background-color: @wireplumber;
 }
 
 /* backlight */
 
 #custom-left_div.7 {
-	background-color: @wireplumber;
-	color: @backlight;
+  background-color: @wireplumber;
+  color: @backlight;
 }
 
 #backlight {
-	background-color: @backlight;
+  background-color: @backlight;
 }
 
 /* battery */
 
 #custom-left_div.8 {
-	background-color: @backlight;
-	color: @battery;
+  background-color: @backlight;
+  color: @battery;
 }
 
 #battery {
-	background-color: @battery;
+  background-color: @battery;
 }
-
 
 /* power menu */
 
 #custom-toggle_theme {
-	border-radius: 16px;
-	padding: 0 19px 0 16px;
-	margin-right: 8px;
-	font-size: 20px;
-	color: @main-fg;
-	background-color: @main-bg;
+  border-radius: 16px;
+  padding: 0 19px 0 16px;
+  margin-right: 8px;
+  font-size: 20px;
+  color: @main-fg;
+  background-color: @main-bg;
 }
 
 #custom-toggle_theme:hover {
-	background-color: @hover-bg;
+  background-color: @hover-bg;
 }
 
 /*---------------------
@@ -249,56 +247,55 @@ button.active label {
 #custom-system_update:hover,
 #mpris:hover,
 #wireplumber:hover {
-	color: @hover-fg;
+  color: @hover-fg;
 }
 
 .warning {
-	color: @warning;
+  color: @warning;
 }
 
 .critical {
-	color: @critical;
+  color: @critical;
 }
 
 .charging {
-	color: @charging;
+  color: @charging;
 }
 
 .muted {
-	color: @hover-fg;
+  color: @hover-fg;
 }
 
 #custom-left_div,
-#custom-right_div
-{
-	font-size: 31px;
+#custom-right_div {
+  font-size: 31px;
 }
 
 /* outline */
 window#waybar {
-	background-color: @outline;
+  background-color: @outline;
 }
 
 /* background */
-window#waybar>box {
-	margin: 4px;
-	background-color: transparent;
+window#waybar > box {
+  margin: 4px;
+  background-color: transparent;
 }
 
 tooltip {
-	border: 2px solid @main-br;
-	border-radius: 10px;
-	background-color: @main-bg;
+  border: 2px solid @main-br;
+  border-radius: 10px;
+  background-color: @main-bg;
 }
 
 tooltip label {
-	margin: 2px 4px;
-	font-weight: normal;
+  margin: 2px 4px;
+  font-weight: normal;
 }
 
 tooltip decoration {
-	border: none;
-	background-color: transparent;
+  border: none;
+  background-color: transparent;
 }
 
 /* Reduce module height */
@@ -306,22 +303,22 @@ tooltip decoration {
 #clock.date,
 #temperature,
 #custom-temperature {
-	padding-top: 0px;
-	padding-bottom: 0px;
-	min-height: 0;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  min-height: 0;
 }
 
 #custom-left_inv.1 {
-	color: @cpu;
+  color: @cpu;
 }
 #custom-right_inv.1 {
-	/* font-size:29px; */
-	color: @time;
+  /* font-size:29px; */
+  color: @time;
 }
 
 #custom-left_inv.2 {
-	/* font-size:29px; */
-	color: @battery;
+  /* font-size:29px; */
+  color: @battery;
 }
 
 /* #custom-left_inv { */
@@ -329,5 +326,5 @@ tooltip decoration {
 /* } */
 #custom-left_inv,
 #custom-right_inv {
-	font-size:32px;
+  font-size: 32px;
 }

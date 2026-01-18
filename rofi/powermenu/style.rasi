@@ -1,10 +1,7 @@
 /**
- *
- * Author : Aditya Shakya (adi1090x)
- * Github : @adi1090x
- * 
- * Rofi Theme File
- * Rofi Version: 1.7.3
+ * Modern Powermenu Theme
+ * Integrated with pywal colors
+ * Features: Glassmorphism, smooth animations, modern design
  **/
 
 /*****----- Configuration -----*****/
@@ -16,28 +13,25 @@ configuration {
 @import "~/.config/rofi/rofi-border.rasi"
 @import "~/.config/rofi/rofi-border-radius.rasi"
 
-
 /*****----- Global Properties -----*****/
 * {
-    /* Resolution : 1920x1080 */
-    mainbox-spacing:             50px;
-    mainbox-margin:              50px;
-    message-margin:              0px 300px;
-    message-padding:             12px;
-    message-border-radius:       12px;
-    listview-spacing:            25px;
-    element-padding:             35px 0px;
-    element-border-radius:       60px;
+    background-window:           rgba(13, 31, 31, 0.92);
+    background-element:          rgba(255, 255, 255, 0.05);
+    background-hover:            rgba(255, 255, 255, 0.12);
+    background-selected:         @color4;
 
-    prompt-font:                 "Iosevka Nerd Font Bold 48";
-    textbox-font:                "Iosevka Nerd Font 12";
-    element-text-font:           "feather 48";
+    mainbox-spacing:             30px;
+    mainbox-margin:              30px;
+    message-margin:              0px 200px;
+    message-padding:             12px 20px;
+    message-border-radius:       14px;
+    listview-spacing:            18px;
+    element-padding:             35px 10px;
+    element-border-radius:       18px;
 
-               
-    background-normal:           white/5%;
-    background-selected:         white/15%;
-    foreground-normal:           white;
-    foreground-selected:         white;
+    prompt-font:                 "JetBrainsMono Nerd Font Bold 36";
+    textbox-font:                "JetBrainsMono Nerd Font 12";
+    element-text-font:           "JetBrainsMono Nerd Font 48";
 }
 
 /*****----- Main Window -----*****/
@@ -46,13 +40,14 @@ window {
     location:                    center;
     anchor:                      center;
     fullscreen:                  false;
-    width:                       1000px;
-    border-radius:               50px;
-    border:                       @border-width;
-    border-color:                 @color11;
+    width:                       1100px;
+    height:                      480px;
+    border-radius:               24px;
+    border:                      2px;
+    border-color:                @color4;
     cursor:                      "default";
-    background-color:		 transparent;
-    background-image:            url("~/.cache/wallpaper/blurred_wallpaper.png", height);
+    background-color:            @background-window;
+    background-image:            url("~/.cache/wallpaper/blurred_wallpaper.png", width);
 }
 
 /*****----- Main Box -----*****/
@@ -79,7 +74,7 @@ prompt {
     enabled:                     true;
     font:                        var(prompt-font);
     background-color:            transparent;
-    text-color:                  var(foreground-normal);
+    text-color:                  @foreground;
 }
 
 /*****----- Message -----*****/
@@ -88,13 +83,16 @@ message {
     margin:                      var(message-margin);
     padding:                     var(message-padding);
     border-radius:               var(message-border-radius);
-    background-color:            var(background-normal);
-    text-color:                  var(foreground-normal);
+    background-color:            @background-element;
+    text-color:                  @foreground;
+    border:                      1px;
+    border-color:                rgba(255, 255, 255, 0.1);
 }
+
 textbox {
     font:                        var(textbox-font);
     background-color:            transparent;
-    text-color:                  inherit;
+    text-color:                  @foreground;
     vertical-align:              0.5;
     horizontal-align:            0.5;
 }
@@ -112,7 +110,7 @@ listview {
     reverse:                     false;
     fixed-height:                true;
     fixed-columns:               true;
-    
+
     spacing:                     var(listview-spacing);
     background-color:            transparent;
     cursor:                      "default";
@@ -123,10 +121,13 @@ element {
     enabled:                     true;
     padding:                     var(element-padding);
     border-radius:               var(element-border-radius);
-    background-color:            var(background-normal);
-    text-color:                  var(foreground-normal);
+    background-color:            @background-element;
+    text-color:                  @foreground;
     cursor:                      pointer;
+    border:                      2px;
+    border-color:                rgba(255, 255, 255, 0.05);
 }
+
 element-text {
     font:                        var(element-text-font);
     background-color:            transparent;
@@ -135,7 +136,17 @@ element-text {
     vertical-align:              0.5;
     horizontal-align:            0.5;
 }
+
 element selected.normal {
-    background-color:            var(background-selected);
-    text-color:                  var(foreground-selected);
+    background-color:            @background-selected;
+    text-color:                  @color0;
+    border-color:                @color5;
+}
+
+element.normal.normal {
+    text-color:                  @color7;
+}
+
+element.selected.normal {
+    text-color:                  @color0;
 }

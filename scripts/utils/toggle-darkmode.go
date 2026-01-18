@@ -58,7 +58,8 @@ func toggleThemeColor(prefersNewColorMode XDGColorScheme, currentWallpaperFullPa
 func updateWalcord(homeDir string) {
 	templatePath := homeDir + "/.config/vesktop/themes/midnight-vesktop.template.css"
 	outputPath := homeDir + "/.config/vesktop/themes/midnight-vesktop.theme.css"
-	cmd := exec.Command("walcord", "-t", templatePath, "-o", outputPath)
+	colorsJson := homeDir + "/.cache/wal/colors.json"
+	cmd := exec.Command("walcord", "-j", colorsJson, "-t", templatePath, "-o", outputPath)
 	err := cmd.Run()
 	ReturnOnErr(err)
 }

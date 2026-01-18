@@ -5,7 +5,7 @@
 !hypr/
 !hypr/**
 
-hypr/conf/
+!hypr/conf/
 
 !bashrc/
 !bashrc/**
@@ -24,6 +24,9 @@ waypaper/config.ini
 
 !rofi/
 !rofi/**
+
+!wofi/
+!wofi/**
 
 settings/sddm/
 !settings/**
