@@ -90,19 +90,19 @@
       "buttons-per-row": 4,
       "actions": [
         {
-          "label": "󰖩",
+          "label": "󰖩 Wifi",
           "command": "kitty -e wifi"
         },
         {
-          "label": "",
+          "label": " Bluetooth",
           "command": "kitty -e bluetui"
         },
         {
-          "label": "󰍬",
+          "label": "󰍬 Mic",
           "command": "~/.config/waybar/scripts/wireplumber.sh mic"
         },
         {
-          "label": "󰕾",
+          "label": "󰕾 Audio",
           "command": "~/.config/waybar/scripts/wireplumber.sh out"
         }
       ]
