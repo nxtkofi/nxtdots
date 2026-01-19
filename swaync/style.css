@@ -1,5 +1,5 @@
 /* Import pywal colors */
-@import '~/.cache/wal/colors-waybar.css';
+@import "../../.cache/wal/colors-waybar.css";
 
 * {
   all: unset;
@@ -20,7 +20,7 @@
 }
 
 .notification {
-  background: alpha(@background, 0.95);
+  background: alpha(@background, 0.2);
   border: 2px solid @color4;
   border-radius: 12px;
   margin: 0;
@@ -176,7 +176,8 @@
 }
 
 @keyframes blink {
-  0%, 100% {
+  0%,
+  100% {
     border-color: @color1;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }

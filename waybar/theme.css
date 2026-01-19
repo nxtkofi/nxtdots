@@ -32,3 +32,16 @@
 @define-color warning @yellow;
 @define-color critical @red;
 @define-color charging @green;
+
+
+
+#custom-notification {
+  background: shade(@background, 1.5);
+  color: @foreground;
+  padding: 0px 12px;
+  border-radius: 50%;
+}
+
+#custom-notification:hover {
+  color: @color5;
+}

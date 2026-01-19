@@ -1,7 +1,0 @@
-{
-	"custom/toggle_theme": {
-		"format": "🌘",
-		"on-click": "~/.config/scripts/bin/main system-theme toggle",
-		"tooltip": false
-	}
-}

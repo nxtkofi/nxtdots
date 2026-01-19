@@ -220,9 +220,7 @@ button.active label {
   background-color: @battery;
 }
 
-/* power menu */
-
-#custom-toggle_theme {
+#custom-notification {
   border-radius: 16px;
   padding: 0 19px 0 16px;
   margin-right: 8px;
@@ -231,8 +229,8 @@ button.active label {
   background-color: @main-bg;
 }
 
-#custom-toggle_theme:hover {
-  background-color: @hover-bg;
+#custom-notification:hover {
+  background-color: alpha(@main-bg, 0.6);
 }
 
 /*---------------------

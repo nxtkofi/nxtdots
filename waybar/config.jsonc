@@ -15,7 +15,7 @@
 		"~/.config/waybar/modules/custom/distro.jsonc",
 		"~/.config/waybar/modules/custom/dividers.jsonc",
 		"~/.config/waybar/modules/custom/system_update.jsonc",
-		"~/.config/waybar/modules/custom/toggle_theme.jsonc",
+		"~/.config/waybar/modules/custom/notification.jsonc",
 		"~/.config/waybar/modules/hyprland/window.jsonc",
 		"~/.config/waybar/modules/hyprland/windowcount.jsonc",
 		"~/.config/waybar/modules/hyprland/workspaces.jsonc"
@@ -66,7 +66,8 @@
 		"custom/left_div#8",
 		"battery",
 		"custom/left_inv#2",
-		"custom/toggle_theme"
+		"custom/notification",
+		"custom/right_inv#3"
 	],
 
 	/*-------------
