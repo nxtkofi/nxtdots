@@ -35,6 +35,64 @@
   margin: 0;
 }
 
+.widget-mpris {
+  background: alpha(@background, 0.6);
+  border: 2px solid @color4;
+  border-radius: 16px;
+  color: @foreground;
+  margin: 12px;
+  padding: 12px;
+}
+
+/* NOTE: Background need *opacity 1* otherwise will turn into the album art blurred  */
+.widget-mpris-player {
+  background-color: @background;
+  border-radius: 22px;
+  padding: 6px 14px;
+  margin: 6px;
+}
+
+.widget-mpris > box > button {
+  color: @foreground;
+  border-radius: 20px;
+}
+
+.widget-mpris button {
+  background: shade(@background, 0.8);
+  border: 1px solid alpha(@color4, 0.4);
+  border-radius: 8px;
+  color: @foreground;
+  margin: 12px 8px;
+  padding: 6px;
+  min-width: 24px;
+  min-height: 24px;
+  transition: all 200ms ease;
+}
+
+.widget-mpris button:hover {
+  background: alpha(@color4, 0.5);
+  border-color: @color4;
+  color: @foreground;
+}
+
+.widget-mpris-album-art {
+  border-radius: 16px;
+}
+
+.widget-mpris-title {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.widget-mpris-subtitle {
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+picture.mpris-background {
+  opacity: 0;
+}
+
 .close-button {
   background: alpha(@color1, 0.8);
   color: @foreground;
@@ -62,6 +120,10 @@
   background: alpha(@color4, 0.2);
 }
 
+.notification-group .notification {
+  background: alpha(@background, 0.9);
+}
+
 /* Summary and body text */
 .summary {
   color: @color5;
@@ -87,7 +149,6 @@
 .image {
   margin: 8px;
   border-radius: 8px;
-  border: 1px solid alpha(@color4, 0.3);
 }
 
 .app-icon {
@@ -97,10 +158,9 @@
 
 /* Control Center */
 .control-center {
-  background: alpha(@background, 0.98);
+  background: alpha(@background, 0.4);
   border: 2px solid @color4;
   border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   margin: 10px;
   padding: 12px;
 }
@@ -187,17 +247,7 @@
   }
 }
 
-/* Screenshot notification enhancement */
-.notification[app-name="hyprshot"],
-.notification[app-name="Hyprshot"] {
-  border: 2px solid @color5;
-  background: alpha(@background, 0.98);
-}
-
-.notification[app-name="hyprshot"] .summary,
-.notification[app-name="Hyprshot"] .summary {
-  color: @color5;
-}
+/* Screenshot notification enhancement - removed due to GTK CSS limitations */
 
 /* Inline reply */
 .inline-reply {
@@ -231,4 +281,148 @@
 
 .notification-action button:active {
   background: @color5;
+}
+
+/* Label Widget - Section Headers */
+.widget-label {
+  background: transparent;
+  margin: 12px 12px 0px 12px;
+  padding: 8px 4px 4px 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: alpha(@foreground, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Remove margin-top from buttons-grid when preceded by label */
+.widget-label + .widget-buttons-grid {
+  margin-top: 4px;
+}
+
+/* Buttons Grid Widget */
+.widget-buttons-grid {
+  background: alpha(@background, 0.6);
+  border: 2px solid @color4;
+  border-radius: 12px;
+  margin: 12px;
+  padding: 8px;
+}
+
+.widget-buttons-grid flowboxchild {
+  min-width: 100px;
+}
+
+.widget-buttons-grid flowboxchild > button {
+  background: alpha(@color4, 0.2);
+  border: 1px solid alpha(@color4, 0.3);
+  border-radius: 10px;
+  color: @foreground;
+  margin: 4px;
+  padding: 14px 18px;
+  transition: all 200ms ease;
+  font-size: 18px;
+  line-height: 1.4;
+  min-width: 100px;
+}
+
+.widget-buttons-grid flowboxchild > button:hover {
+  background: alpha(@color4, 0.8);
+  color: @background;
+  transform: scale(1.08);
+}
+
+/* Audio buttons grid - icon only buttons */
+.widget-buttons-grid#audio flowboxchild > button {
+  min-height: 60px;
+  font-size: 28px;
+  line-height: 1.5;
+  padding: 12px;
+}
+
+/* Volume Slider Widget */
+.widget-volume {
+  background: alpha(@background, 0.6);
+  border: 2px solid @color4;
+  border-radius: 12px;
+  margin: 12px;
+  padding: 12px;
+}
+
+.widget-volume > box > label {
+  font-size: 16px;
+  margin-right: 12px;
+  color: @foreground;
+}
+
+.widget-volume scale {
+  min-height: 32px;
+}
+
+.widget-volume scale trough {
+  background: alpha(@color8, 0.3);
+  border-radius: 8px;
+  min-height: 8px;
+}
+
+.widget-volume scale trough highlight {
+  background: @color4;
+  border-radius: 8px;
+}
+
+.widget-volume scale trough slider {
+  background: @foreground;
+  border-radius: 50%;
+  min-width: 20px;
+  min-height: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Backlight Slider Widget */
+.widget-backlight {
+  background: alpha(@background, 0.6);
+  border: 2px solid @color4;
+  border-radius: 12px;
+  margin: 12px;
+  padding: 12px;
+}
+
+.widget-backlight > box > label {
+  font-size: 16px;
+  margin-right: 12px;
+  color: @foreground;
+}
+
+.widget-backlight scale {
+  min-height: 32px;
+}
+
+.widget-backlight scale trough {
+  background: alpha(@color8, 0.3);
+  border-radius: 8px;
+  min-height: 8px;
+}
+
+.widget-backlight scale trough highlight {
+  background: @color5;
+  border-radius: 8px;
+}
+
+.widget-backlight scale trough slider {
+  background: @foreground;
+  border-radius: 50%;
+  min-width: 20px;
+  min-height: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Hide MPRIS navigation arrows */
+.widget-mpris > box > button:first-child,
+.widget-mpris > box > button:last-child {
+  opacity: 0;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
 }

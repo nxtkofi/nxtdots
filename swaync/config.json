@@ -39,6 +39,13 @@
   "widgets": [
     "title",
     "dnd",
+    "label#actions",
+    "buttons-grid#main",
+    "label#audio",
+    "buttons-grid#audio",
+    "mpris",
+    "volume",
+    "backlight",
     "notifications"
   ],
   "widget-config": {
@@ -50,13 +57,61 @@
     "dnd": {
       "text": "Do Not Disturb"
     },
-    "label": {
-      "max-lines": 5,
-      "text": "Notification Center"
+    "label#actions": {
+      "text": "Quick Actions"
+    },
+    "label#audio": {
+      "text": "Audio & Network"
     },
     "mpris": {
       "image-size": 96,
-      "image-radius": 8
+      "image-radius": 12,
+      "show-album-art": "always",
+      "loop-carousel": false,
+      "autohide": true
+    },
+    "buttons-grid#main": {
+      "actions": [
+        {
+          "label": "󰔎 Theme",
+          "command": "~/.config/scripts/bin/main system-theme toggle"
+        },
+        {
+          "label": "󰌾 Lock",
+          "command": "hyprlock"
+        },
+        {
+          "label": "󰍃 Logout",
+          "command": "hyprctl dispatch exit"
+        }
+      ]
+    },
+    "buttons-grid#audio": {
+      "buttons-per-row": 4,
+      "actions": [
+        {
+          "label": "󰖩",
+          "command": "kitty -e wifi"
+        },
+        {
+          "label": "",
+          "command": "kitty -e bluetui"
+        },
+        {
+          "label": "󰍬",
+          "command": "~/.config/waybar/scripts/wireplumber.sh mic"
+        },
+        {
+          "label": "󰕾",
+          "command": "~/.config/waybar/scripts/wireplumber.sh out"
+        }
+      ]
+    },
+    "volume": {
+      "label": "󰕾"
+    },
+    "backlight": {
+      "label": "󰃟"
     }
   }
 }

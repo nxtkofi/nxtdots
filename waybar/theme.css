@@ -14,12 +14,10 @@
 @define-color hover-bg @foreground;
 @define-color hover-fg @foreground;
 
-
 @define-color workspaces @background;
 @define-color temperature shade(@background, 2.0);
 @define-color tray shade(@background, 2.0);
 @define-color wireplumber shade(@background, 2.0);
-
 
 @define-color memory shade(@background, 1.5);
 @define-color date shade(@background, 1.5);
@@ -28,17 +26,14 @@
 @define-color time @background;
 @define-color battery @background;
 
-
 @define-color warning @yellow;
 @define-color critical @red;
 @define-color charging @green;
 
-
-
 #custom-notification {
   background: shade(@background, 1.5);
   color: @foreground;
-  padding: 0px 12px;
+  padding: 8px;
   border-radius: 50%;
 }
 
