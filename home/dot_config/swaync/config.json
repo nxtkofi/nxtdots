@@ -1,0 +1,117 @@
+{
+  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "positionX": "right",
+  "positionY": "top",
+  "layer": "overlay",
+  "control-center-layer": "overlay",
+  "layer-shell": true,
+  "cssPriority": "application",
+  "control-center-margin-top": 10,
+  "control-center-margin-bottom": 10,
+  "control-center-margin-right": 10,
+  "control-center-margin-left": 0,
+  "notification-2fa-action": true,
+  "notification-inline-replies": false,
+  "notification-icon-size": 48,
+  "notification-body-image-height": 100,
+  "notification-body-image-width": 200,
+  "timeout": 5,
+  "timeout-low": 3,
+  "timeout-critical": 0,
+  "fit-to-screen": true,
+  "control-center-width": 400,
+  "control-center-height": 600,
+  "notification-window-width": 400,
+  "keyboard-shortcuts": true,
+  "image-visibility": "when-available",
+  "transition-time": 200,
+  "hide-on-clear": true,
+  "hide-on-action": true,
+  "script-fail-notify": true,
+  "scripts": {},
+  "notification-visibility": {
+    "example-name": {
+      "state": "muted",
+      "urgency": "Low",
+      "app-name": "Spotify"
+    }
+  },
+  "widgets": [
+    "title",
+    "dnd",
+    "label#actions",
+    "buttons-grid#main",
+    "label#audio",
+    "buttons-grid#audio",
+    "mpris",
+    "volume",
+    "backlight",
+    "notifications"
+  ],
+  "widget-config": {
+    "title": {
+      "text": "Notifications",
+      "clear-all-button": true,
+      "button-text": "Clear All"
+    },
+    "dnd": {
+      "text": "Do Not Disturb"
+    },
+    "label#actions": {
+      "text": "Quick Actions"
+    },
+    "label#audio": {
+      "text": "Audio & Network"
+    },
+    "mpris": {
+      "image-size": 96,
+      "image-radius": 12,
+      "show-album-art": "always",
+      "loop-carousel": false,
+      "autohide": true
+    },
+    "buttons-grid#main": {
+      "actions": [
+        {
+          "label": "󰔎 Theme",
+          "command": "~/.config/scripts/bin/main system-theme toggle"
+        },
+        {
+          "label": "󰌾 Lock",
+          "command": "hyprlock"
+        },
+        {
+          "label": "󰍃 Logout",
+          "command": "hyprctl dispatch exit"
+        }
+      ]
+    },
+    "buttons-grid#audio": {
+      "buttons-per-row": 4,
+      "actions": [
+        {
+          "label": "󰖩 Wifi",
+          "command": "kitty -e wifi"
+        },
+        {
+          "label": " Bluetooth",
+          "command": "kitty -e bluetui"
+        },
+        {
+          "label": "󰍬 Mic",
+          "command": "~/.config/waybar/scripts/wireplumber.sh mic"
+        },
+        {
+          "label": "󰕾 Audio",
+          "command": "~/.config/waybar/scripts/wireplumber.sh out"
+        }
+      ]
+    },
+    "volume": {
+      "label": "󰕾"
+    },
+    "backlight": {
+      "label": "󰃟"
+    }
+  }
+}

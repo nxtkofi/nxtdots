@@ -1,0 +1,12 @@
+{{- $has_nvidia := promptBoolOnce . "has_nvidia" "Does this machine have an NVIDIA GPU" -}}
+{{- $latitude := promptStringOnce . "latitude" "Latitude for weather widget (e.g. 50.860130)" -}}
+{{- $longitude := promptStringOnce . "longitude" "Longitude for weather widget (e.g. 17.470869)" -}}
+{{- $browser := promptStringOnce . "browser" "Default browser" -}}
+{{- $monitors_raw := promptStringOnce . "monitors_raw" "Monitor lines, pipe-separated (e.g. monitor=DP-2,3440x1440@165,0x0,1|monitor=HDMI-A-1,1920x1080@120,-1920x220,1)" -}}
+
+[data]
+    has_nvidia = {{ $has_nvidia }}
+    latitude = {{ $latitude | quote }}
+    longitude = {{ $longitude | quote }}
+    browser = {{ $browser | quote }}
+    monitors_raw = {{ $monitors_raw | quote }}
