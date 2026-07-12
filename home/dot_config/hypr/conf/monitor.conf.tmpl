@@ -1,0 +1,17 @@
+# Main ultrawide monitor (center)
+{{- if .monitors_raw }}
+{{- range (splitList "|" .monitors_raw) }}
+{{- if ne . "" }}
+{{ . }}
+{{- end }}
+{{- end }}
+{{- else }}
+monitor=,preferred,auto,1
+{{- end }}
+# # Secondary monitor (left, 360px down)
+# monitor=HDMI-A-1,1920x1080@60,-1920x360,1
+
+# Fallback for other monitors
+# monitor=,preferred,auto,1
+
+source = ~/.config/hypr/conf/monitor.local.conf

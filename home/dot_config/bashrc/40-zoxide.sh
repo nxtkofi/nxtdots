@@ -1,0 +1,5 @@
+eval "$(zoxide init bash)"
+
+bashrc_sidecar="${BASH_SOURCE[0]%.sh}.local.sh"
+[ -r "$bashrc_sidecar" ] && source "$bashrc_sidecar"
+unset bashrc_sidecar
