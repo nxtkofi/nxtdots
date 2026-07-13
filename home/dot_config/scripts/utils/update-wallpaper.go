@@ -9,7 +9,6 @@ import (
 func UpdateWallpaper(newWallpaperFullFilePath, homeDir string) {
 	homeDir, err := os.UserHomeDir()
 	ReturnOnErr(err)
-	cavaConfigPath := homeDir + "/.config/cava/config"
 	cachePath := homeDir + "/.cache/wallpaper/"
 
 	err = os.MkdirAll(filepath.Dir(cachePath+"wallpaper-generated/"), os.ModePerm)
@@ -34,7 +33,7 @@ func UpdateWallpaper(newWallpaperFullFilePath, homeDir string) {
 	colors, err := GetPywalColors()
 	ReturnOnErr(err)
 
-	err = UpdateCavaGradient(cavaConfigPath, colors)
+	err = UpdateCavaGradient(homeDir, colors)
 
 	ReturnOnErr(err)
 	err = UpdateSpicetify(colors, homeDir)

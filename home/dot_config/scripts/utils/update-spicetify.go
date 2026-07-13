@@ -1,30 +1,47 @@
 package utils
 
 import (
-	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
+const spicetifyColorTemplate = `[pywal]
+text = c0c0c0
+subtext = a0a0a0
+nav-active-text = 101010
+main = 101010
+sidebar = 101010
+player = 101010
+card = 101010
+shadow = 101010
+main-secondary = 101010
+button = 6f8faf
+button-secondary = c0c0c0
+button-active = 6f8faf
+button-disabled = 353535
+nav-active = 8aa0c8
+play-button = 6f8faf
+tab-active = 101010
+notification = c0c0c0
+notification-error = 353535
+playback-bar = 6f8faf
+misc = c0c0c0
+`
+
 func UpdateSpicetify(pywalColors map[string]string, homeDir string) error {
-	pathToTheme := homeDir + "/.config/spicetify/Themes/Sleek/color.ini"
-	file, err := os.Open(pathToTheme)
+	themeDir := filepath.Join(homeDir, ".config", "spicetify", "Themes", "Sleek")
+	pathToTheme := filepath.Join(themeDir, "color.ini")
+	configBytes, err := os.ReadFile(pathToTheme)
 	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-
-	var configAsArray []string
-	for scanner.Scan() {
-		configAsArray = append(configAsArray, scanner.Text())
+		configBytes, err = os.ReadFile(filepath.Join(themeDir, "color.ini.template"))
+		if err != nil {
+			configBytes = []byte(spicetifyColorTemplate)
+		}
 	}
 
-	if err := scanner.Err(); err != nil {
-		return err
-	}
+	configAsArray := strings.Split(string(configBytes), "\n")
 
 	for i, line := range configAsArray {
 		if !strings.Contains(line, "=") {
@@ -63,5 +80,9 @@ func UpdateSpicetify(pywalColors map[string]string, homeDir string) error {
 	}
 
 	output := strings.Join(configAsArray, "\n")
+	if err := os.MkdirAll(themeDir, 0o755); err != nil {
+		return err
+	}
+
 	return os.WriteFile(pathToTheme, []byte(output), 0644)
 }

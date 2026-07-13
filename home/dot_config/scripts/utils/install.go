@@ -130,19 +130,23 @@ func RiceSpotify() {
 	}
 
 	LogInfo("Setting Spotify permissions")
-	chmodRecursiveCmd := exec.Command("sudo", "chmod", "-R", "a+wr", "/opt/spotify/Apps")
-	LogCommand("sudo chmod -R a+wr /opt/spotify/Apps")
-	err = chmodRecursiveCmd.Run()
-	ReturnOnErr(err)
-
-	chmodCmd := exec.Command("sudo", "chmod", "a+wr", "/opt/spotify")
-	LogCommand("sudo chmod a+wr /opt/spotify")
-	err = chmodCmd.Run()
-	ReturnOnErr(err)
-
 	if _, err := os.Stat("/opt/spotify"); os.IsNotExist(err) {
 		LogError("Spotify not found, skipping spicetify configuration", err)
 		return
+	}
+
+	chmodRecursiveCmd := exec.Command("sudo", "chmod", "-R", "a+rwX", "/opt/spotify/Apps")
+	LogCommand("sudo chmod -R a+rwX /opt/spotify/Apps")
+	err = chmodRecursiveCmd.Run()
+	if err != nil {
+		LogError("Could not update /opt/spotify/Apps permissions, continuing", err)
+	}
+
+	chmodCmd := exec.Command("sudo", "chmod", "a+rwX", "/opt/spotify")
+	LogCommand("sudo chmod a+rwX /opt/spotify")
+	err = chmodCmd.Run()
+	if err != nil {
+		LogError("Could not update /opt/spotify permissions, continuing", err)
 	}
 
 	LogInfo("Configuring Spicetify")
@@ -164,11 +168,39 @@ func RiceSpotify() {
 		LogError("Spicetify theme config failed, but continuing", err)
 	}
 
+	spicetifyColorScheme := exec.Command("spicetify", "config", "color_scheme", "pywal")
+	LogCommand("spicetify config color_scheme pywal")
+	err = spicetifyColorScheme.Run()
+	if err != nil {
+		LogError("Spicetify color scheme config failed, but continuing", err)
+	}
+
+	spicetifyConfigStability := exec.Command("spicetify", "config", "inject_theme_js", "0", "inject_css", "1", "replace_colors", "1")
+	LogCommand("spicetify config inject_theme_js 0 inject_css 1 replace_colors 1")
+	err = spicetifyConfigStability.Run()
+	if err != nil {
+		LogError("Spicetify stability config failed, but continuing", err)
+	}
+
 	spicetifyApply := exec.Command("spicetify", "apply")
 	LogCommand("spicetify apply")
 	err = spicetifyApply.Run()
 	if err != nil {
-		LogError("Spicetify apply failed, but continuing", err)
+		LogError("Spicetify apply failed, attempting restore+reapply", err)
+
+		spicetifyRestoreBackupApply := exec.Command("spicetify", "restore", "backup", "apply")
+		LogCommand("spicetify restore backup apply")
+		restoreErr := spicetifyRestoreBackupApply.Run()
+		if restoreErr != nil {
+			LogError("Spicetify restore backup apply failed, but continuing", restoreErr)
+		} else {
+			spicetifyApplyRetry := exec.Command("spicetify", "apply")
+			LogCommand("spicetify apply (retry)")
+			retryErr := spicetifyApplyRetry.Run()
+			if retryErr != nil {
+				LogError("Spicetify apply retry failed, but continuing", retryErr)
+			}
+		}
 	}
 
 	LogInfo("Spotify ricing complete")
@@ -730,8 +762,7 @@ func runInitialPywalSetup(homedir string) {
 		return
 	}
 
-	cavaConfigPath := homedir + "/.config/cava/config"
-	err = UpdateCavaGradient(cavaConfigPath, colors)
+	err = UpdateCavaGradient(homedir, colors)
 	if err != nil {
 		LogError("Failed to update cava gradient", err)
 		fmt.Printf("Warning: Could not update cava gradient: %v\n", err)

@@ -2,7 +2,13 @@
 
 colors=($(head -n 4 ~/.cache/wal/colors))
 
-cfg="$HOME/.config/cava/config"
-sed -i "/^gradient_color_1/c\gradient_color_1 = '${colors[1]}'" "$cfg"
-sed -i "/^gradient_color_2/c\gradient_color_2 = '${colors[2]}'" "$cfg"
-sed -i "/^gradient_color_3/c\gradient_color_3 = '${colors[3]}'" "$cfg"
+theme_dir="$HOME/.config/cava/themes"
+theme="$theme_dir/pywal.generated.local"
+mkdir -p "$theme_dir"
+cat > "$theme" <<EOF
+gradient = 1
+gradient_count = 3
+gradient_color_1 = '${colors[1]}'
+gradient_color_2 = '${colors[2]}'
+gradient_color_3 = '${colors[3]}'
+EOF
