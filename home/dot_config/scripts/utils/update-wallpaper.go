@@ -20,13 +20,13 @@ func UpdateWallpaper(newWallpaperFullFilePath, homeDir string) {
 
 	colorScheme := GetCurrentSystemTheme()
 
-	swwwCmd := exec.Command("swww", "img", newWallpaperFullFilePath,
+	awwwCmd := exec.Command("awww", "img", newWallpaperFullFilePath,
 		"--transition-type", "grow",
 		"--transition-pos", "0.5,0.5",
 		"--transition-duration", "1.5",
 		"--transition-fps", "165",
 		"--transition-bezier", "0.25,0.1,0.25,1.0")
-	err = swwwCmd.Run()
+	err = awwwCmd.Run()
 	ReturnOnErr(err)
 
 	err = ExecPywal(colorScheme, newWallpaperFullFilePath)

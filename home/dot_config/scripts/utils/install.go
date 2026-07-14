@@ -43,7 +43,7 @@ func Install() {
 
 	aurPackages := []string{
 		"vesktop", "walcord", "spicetify-cli", "zen-browser-bin",
-		"spotify", "pacseek", "swww",
+		"spotify", "pacseek", "awww",
 	}
 
 	utilityPackages := []string{
