@@ -76,6 +76,26 @@ cd ~/.config/scripts && go build -o bin/main main.go
 
 ---
 
+## Customizing your setup
+
+This repo is the shared core. Keep personal changes in `*.local.*` files so you can still pull upstream updates.
+
+- Shared config change: edit `~/.config/...`, then run `chezmoi add ~/.config/path/to/file` and commit it in `~/.local/share/chezmoi`.
+- New shared config folder: create it under `~/.config/...`, test it, then `chezmoi add ~/.config/path/to/folder`.
+- Public local hook: add an empty placeholder in the source repo with `create_empty_`, e.g. `home/dot_config/hypr/conf/create_empty_monitor.local.conf` creates `~/.config/hypr/conf/monitor.local.conf` only if it is missing.
+- Private override: put the real `*.local.*` content in `~/.local/share/chezmoi-private/dot_config/...` and apply it with `chezmoi apply -S ~/.local/share/chezmoi-private`.
+
+Recommended apply order:
+
+```sh
+chezmoi apply
+chezmoi apply -S ~/.local/share/chezmoi-private
+```
+
+Public `create_empty_*` files prevent missing-file errors for new users. Private `.local` files override them on your own machine without forking the core config.
+
+---
+
 ## Requirements
 
 Those packages will be automatically installed if You run install script:
@@ -189,4 +209,3 @@ One time setup:
 ## Thanks
 Thanks to ml4w for providing such a great base for this ricing
 Big thanks to - https://www.reddit.com/r/unixporn/comments/1chv3tr/hyprland_everything_pywal/ (repo:https://github.com/magnusKue/wal-switcher/tree/master), he made pywal spicetifying easy!
-
