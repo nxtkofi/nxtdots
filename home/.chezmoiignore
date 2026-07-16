@@ -1,3 +1,35 @@
 readme.md
 WORKFLOW.md
 .github
+
+{{- $private := joinPath .chezmoi.homeDir ".local/share/chezmoi-private" -}}
+{{- if stat (joinPath $private "dot_config/bashrc/10-alias.local.sh") }}
+.config/bashrc/10-alias.local.sh
+{{- end }}
+{{- if stat (joinPath $private "dot_config/bashrc/20-env.local.sh") }}
+.config/bashrc/20-env.local.sh
+{{- end }}
+{{- if stat (joinPath $private "dot_config/bashrc/30-ui.local.sh") }}
+.config/bashrc/30-ui.local.sh
+{{- end }}
+{{- if stat (joinPath $private "dot_config/hypr/conf/environment.local.conf") }}
+.config/hypr/conf/environment.local.conf
+{{- end }}
+{{- if stat (joinPath $private "dot_config/hypr/conf/keybindings.local.conf") }}
+.config/hypr/conf/keybindings.local.conf
+{{- end }}
+{{- if stat (joinPath $private "dot_config/hypr/conf/monitor.local.conf") }}
+.config/hypr/conf/monitor.local.conf
+{{- end }}
+{{- if stat (joinPath $private "dot_config/hypr/conf/windowrule.local.conf") }}
+.config/hypr/conf/windowrule.local.conf
+{{- end }}
+{{- if stat (joinPath $private "dot_config/hypr/conf/workspace.local.conf") }}
+.config/hypr/conf/workspace.local.conf
+{{- end }}
+{{- if stat (joinPath $private "dot_config/hypr/hyprland.local.conf") }}
+.config/hypr/hyprland.local.conf
+{{- end }}
+{{- if stat (joinPath $private "dot_config/kitty/kitty.local.conf") }}
+.config/kitty/kitty.local.conf
+{{- end }}
