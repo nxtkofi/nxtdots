@@ -1,9 +1,12 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 func UpdateCavaGradient(homeDir string, allPywalColors map[string]string) error {
@@ -12,12 +15,25 @@ func UpdateCavaGradient(homeDir string, allPywalColors map[string]string) error 
 		return err
 	}
 
-	theme := fmt.Sprintf(`gradient = 1
+	theme := fmt.Sprintf(`[color]
+gradient = 1
 gradient_count = 3
-gradient_color_1 = %s
-gradient_color_2 = %s
-gradient_color_3 = %s
-`, allPywalColors["color1"], allPywalColors["color2"], allPywalColors["color3"])
+gradient_color_1 = '%s'
+gradient_color_2 = '%s'
+gradient_color_3 = '%s'
+`, strings.Trim(allPywalColors["color1"], "'"), strings.Trim(allPywalColors["color2"], "'"), strings.Trim(allPywalColors["color3"], "'"))
 
-	return os.WriteFile(filepath.Join(themeDir, "pywal.generated.local"), []byte(theme), 0o644)
+	if err := os.WriteFile(filepath.Join(themeDir, "pywal.generated.local"), []byte(theme), 0o644); err != nil {
+		return err
+	}
+
+	if err := exec.Command("pkill", "-USR2", "-x", "cava").Run(); err != nil {
+		var exitError *exec.ExitError
+		if errors.As(err, &exitError) && exitError.ExitCode() == 1 {
+			return nil
+		}
+		return fmt.Errorf("reload cava colors: %w", err)
+	}
+
+	return nil
 }
