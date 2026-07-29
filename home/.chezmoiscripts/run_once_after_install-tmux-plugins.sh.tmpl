@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Install Catppuccin tmux theme if missing.
+# This runs once after chezmoi apply so new machines get the plugin automatically.
+
+TMUX_PLUGIN_DIR="{{ .chezmoi.homeDir }}/.config/tmux/plugins/tmux"
+
+if [ -d "$TMUX_PLUGIN_DIR/.git" ]; then
+    echo "catppuccin/tmux plugin already present."
+elif [ -d "$TMUX_PLUGIN_DIR" ]; then
+    echo "WARNING: $TMUX_PLUGIN_DIR exists but is not a git repo. Skipping install."
+else
+    echo "Installing catppuccin/tmux plugin..."
+    git clone https://github.com/catppuccin/tmux.git "$TMUX_PLUGIN_DIR"
+fi
